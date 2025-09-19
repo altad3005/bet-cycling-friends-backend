@@ -1,1 +1,25 @@
-export class Bonus {}
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { Race } from '../../races/entities/race.entity';
+import { Rider } from '../../riders/entities/rider.entity';
+
+@Entity()
+export class Bonus {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => User, (user) => user.bets)
+  user: User;
+
+  @ManyToOne(() => Race, (race) => race.predictions)
+  race: Race;
+
+  @ManyToOne(() => Rider)
+  rider: Rider;
+
+  @Column({ nullable: true })
+  bonus: string; // ex: 'joker', 'capitaine', 'swap'
+
+  @Column({ default: 0 })
+  points: number;
+}

@@ -1,8 +1,9 @@
-import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Race } from '../../races/entities/race.entity';
 import { Rider } from 'src/riders/entities/rider.entity';
 
+@Entity()
 export class Bet {
   @PrimaryGeneratedColumn()
   id: number;

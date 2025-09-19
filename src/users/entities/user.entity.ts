@@ -1,6 +1,8 @@
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Bet } from '../../bets/entities/bet.entity';
+import { LeagueMember } from '../../leagues_users/entities/leagues_user.entity';
 
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,6 +18,9 @@ export class User {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @OneToMany(() => LeagueMember, (member) => member.user)
+  leagues: LeagueMember[];
 
   @OneToMany(() => Bet, (bet) => bet.user)
   bets: Bet[];

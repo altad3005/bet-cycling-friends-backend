@@ -1,6 +1,7 @@
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Bet } from '../../bets/entities/bet.entity';
 
+@Entity()
 export class Race {
   @PrimaryGeneratedColumn()
   id: number;
