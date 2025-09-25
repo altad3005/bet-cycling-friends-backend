@@ -11,6 +11,7 @@ import { UserLeagueModule } from './user_league/user_league.module';
 import { PredictionsModule } from './predictions/predictions.module';
 import { BadgesModule } from './badges/badges.module';
 import { NotifiactionsModule } from './notifiactions/notifiactions.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { NotifiactionsModule } from './notifiactions/notifiactions.module';
     PredictionsModule,
     BadgesModule,
     NotifiactionsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
