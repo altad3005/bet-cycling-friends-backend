@@ -1,11 +1,19 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Bet } from '../../bets/entities/bet.entity';
-import { LeagueMember } from '../../leagues_users/entities/leagues_user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { League } from '../../leagues/entities/league.entity';
+import { UserLeague } from '../../user_league/entities/user_league.entity';
+import { Prediction } from '../../predictions/entities/prediction.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true })
   email: string;
@@ -19,9 +27,24 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
-  @OneToMany(() => LeagueMember, (member) => member.user)
-  leagues: LeagueMember[];
+  @Column({ default: true })
+  notifications: boolean;
 
-  @OneToMany(() => Bet, (bet) => bet.user)
-  bets: Bet[];
+  @Column({ type: 'json', nullable: true })
+  preferences: Record<string, any>;
+
+  @OneToMany(() => League, (league) => league.creator)
+  createdLeagues: League[];
+
+  @OneToMany(() => UserLeague, (userLeague) => userLeague.user)
+  userLeagues: UserLeague[];
+
+  @OneToMany(() => Prediction, (prediction) => prediction.user)
+  predictions: Prediction[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

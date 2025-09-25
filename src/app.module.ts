@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { LeaguesModule } from './leagues/leagues.module';
 import { RacesModule } from './races/races.module';
-import { BonusesModule } from './bonuses/bonuses.module';
-import { BetsModule } from './bets/bets.module';
 import { RidersModule } from './riders/riders.module';
-import { LeaguesUsersModule } from './leagues_users/leagues_users.module';
+import { UserLeagueModule } from './user_league/user_league.module';
+import { PredictionsModule } from './predictions/predictions.module';
+import { BadgesModule } from './badges/badges.module';
+import { NotifiactionsModule } from './notifiactions/notifiactions.module';
 
 @Module({
   imports: [
@@ -32,10 +33,11 @@ import { LeaguesUsersModule } from './leagues_users/leagues_users.module';
     UsersModule,
     LeaguesModule,
     RacesModule,
-    BonusesModule,
-    BetsModule,
     RidersModule,
-    LeaguesUsersModule,
+    UserLeagueModule,
+    PredictionsModule,
+    BadgesModule,
+    NotifiactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
