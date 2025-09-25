@@ -25,8 +25,7 @@ import { NotifiactionsModule } from './notifiactions/notifiactions.module';
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        //synchronize: config.get<string>('NODE_ENV') === 'development', // synchro auto seulement en dev
-        synchronize: true,
+        synchronize: config.get<string>('NODE_ENV') === 'development', // synchro auto seulement en dev
         logging: true,
       }),
     }),
