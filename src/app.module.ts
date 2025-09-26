@@ -12,6 +12,7 @@ import { PredictionsModule } from './predictions/predictions.module';
 import { BadgesModule } from './badges/badges.module';
 import { NotifiactionsModule } from './notifiactions/notifiactions.module';
 import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AuthModule } from './auth/auth.module';
     BadgesModule,
     NotifiactionsModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
