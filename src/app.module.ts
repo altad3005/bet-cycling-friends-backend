@@ -27,7 +27,6 @@ import { AuthModule } from './auth/auth.module';
         database: config.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: config.get<string>('NODE_ENV') === 'development', // synchro auto seulement en dev
-        logging: true,
       }),
     }),
     UsersModule,

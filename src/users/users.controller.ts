@@ -1,29 +1,8 @@
-import {
-  Controller,
-  Get,
-  Put,
-  Body,
-  UseGuards,
-  Request,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, Put, Body, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-interface AuthenticatedRequest extends Request {
-  user: {
-    id: string;
-    email: string;
-    pseudo: string;
-  };
-}
-
-export class UpdateProfileDto {
-  pseudo?: string;
-  avatar?: string;
-  notifications?: boolean;
-  preferences?: Record<string, any>;
-}
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import type { AuthenticatedRequest } from '../common/interfaces/authenticated-request.interface';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -38,9 +17,8 @@ export class UsersController {
   @Put('me')
   async updateMyProfile(
     @Request() req: AuthenticatedRequest,
-    @Body(ValidationPipe) updateData: UpdateProfileDto
+    @Body() updateData: UpdateProfileDto,
   ) {
-    const { ...allowedUpdates } = updateData;
-    return this.usersService.updateUser(req.user.id, allowedUpdates);
+    return this.usersService.updateUser(req.user.id, updateData);
   }
 }
