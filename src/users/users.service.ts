@@ -36,4 +36,8 @@ export class UsersService {
     Object.assign(user, updateData);
     return this.usersRepository.save(user);
   }
+
+  async findAll() {
+    return this.usersRepository.find();
+  }
 }

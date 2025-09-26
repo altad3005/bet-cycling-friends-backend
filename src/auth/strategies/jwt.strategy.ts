@@ -18,6 +18,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return await this.usersService.findById(payload.sub);
+    return await this.usersService.findById(payload.sub); // Inclut automatiquement le rôle
   }
 }

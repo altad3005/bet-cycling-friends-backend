@@ -9,6 +9,7 @@ import {
 import { League } from '../../leagues/entities/league.entity';
 import { UserLeague } from '../../user_league/entities/user_league.entity';
 import { Prediction } from '../../predictions/entities/prediction.entity';
+import { Role } from '../../common/enums/role.enum';
 
 @Entity()
 export class User {
@@ -32,6 +33,13 @@ export class User {
 
   @Column({ type: 'json', nullable: true })
   preferences: Record<string, any>;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  role: Role;
 
   @OneToMany(() => League, (league) => league.creator)
   createdLeagues: League[];

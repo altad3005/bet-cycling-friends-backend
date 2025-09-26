@@ -10,7 +10,12 @@ import {
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, CreateAdminDto } from './dto/auth.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from '../common/enums/role.enum';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +24,27 @@ export class AuthController {
   @Post('register')
   async register(@Body(ValidationPipe) registerDto: RegisterDto) {
     return this.authService.register(registerDto);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Post('create-admin')
+  async createAdmin(
+    @Body(ValidationPipe) createAdminDto: CreateAdminDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.authService.register(
+      { ...createAdminDto, role: Role.ADMIN },
+      user,
+    );
+  }
+
+  // Endpoint spécial pour créer le premier admin (à supprimer après usage)
+  @Post('setup-admin')
+  async setupFirstAdmin(@Body(ValidationPipe) createAdminDto: CreateAdminDto) {
+    // TODO: Ajouter une protection (variable d'environnement, etc.)
+    // ou supprimer cet endpoint après avoir créé le premier admin
+    return this.authService.createAdmin(createAdminDto);
   }
 
   @UseGuards(LocalAuthGuard)

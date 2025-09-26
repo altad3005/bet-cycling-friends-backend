@@ -2,13 +2,15 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { RegisterDto, LoginDto, CreateAdminDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity';
 import { AuthenticatedUser } from '../users/interfaces/authenticated-user.interface';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +19,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto, requestingUser?: User) {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
@@ -32,6 +34,13 @@ export class AuthService {
       throw new ConflictException('Pseudo already taken');
     }
 
+    // Seuls les admins peuvent créer d'autres admins
+    if (registerDto.role === Role.ADMIN) {
+      if (!requestingUser || requestingUser.role !== Role.ADMIN) {
+        throw new ForbiddenException('Only admins can create admin accounts');
+      }
+    }
+
     // Hash le mot de passe
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(registerDto.password, saltRounds);
@@ -40,10 +49,16 @@ export class AuthService {
     const user: User = await this.usersService.create({
       ...registerDto,
       password: hashedPassword,
+      role: registerDto.role || Role.USER,
     });
 
     // Générer le token JWT
-    const payload = { email: user.email, sub: user.id, pseudo: user.pseudo };
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      pseudo: user.pseudo,
+      role: user.role
+    };
 
     return {
       access_token: this.jwtService.sign(payload),
@@ -52,9 +67,20 @@ export class AuthService {
         email: user.email,
         pseudo: user.pseudo,
         avatar: user.avatar,
+        role: user.role,
         createdAt: user.createdAt,
       },
     };
+  }
+
+  async createAdmin(createAdminDto: CreateAdminDto) {
+    const adminData = {
+      ...createAdminDto,
+      role: Role.ADMIN,
+    };
+
+    // Créer un admin sans vérification de rôle (pour le premier admin)
+    return this.register(adminData);
   }
 
   async login(user: AuthenticatedUser) {
