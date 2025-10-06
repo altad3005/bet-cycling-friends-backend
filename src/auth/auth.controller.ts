@@ -6,16 +6,19 @@ import {
   Request,
   Get,
   ValidationPipe,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RegisterDto, LoginDto, CreateAdminDto } from './dto/auth.dto';
+import { RegisterDto } from './dto/register.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
 import { Role } from '../common/enums/role.enum';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../users/entities/user.entity';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -39,18 +42,15 @@ export class AuthController {
     );
   }
 
-  // Endpoint spécial pour créer le premier admin (à supprimer après usage)
-  @Post('setup-admin')
-  async setupFirstAdmin(@Body(ValidationPipe) createAdminDto: CreateAdminDto) {
-    // TODO: Ajouter une protection (variable d'environnement, etc.)
-    // ou supprimer cet endpoint après avoir créé le premier admin
-    return this.authService.createAdmin(createAdminDto);
-  }
-
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: { user: any }) {
-    return this.authService.login(req.user);
+  async login(@Body() loginDto: LoginDto) {
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
+    if (!user) throw new UnauthorizedException();
+    return this.authService.login(user);
   }
 
   @UseGuards(JwtAuthGuard)
