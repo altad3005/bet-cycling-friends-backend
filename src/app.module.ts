@@ -13,6 +13,8 @@ import { BadgesModule } from './badges/badges.module';
 import { NotifiactionsModule } from './notifiactions/notifiactions.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
+import { ScraperModule } from './scraper/scraper.module';
+import { ScrapperService } from './scrapper/scrapper.service';
 
 @Module({
   imports: [
@@ -40,8 +42,9 @@ import { AdminModule } from './admin/admin.module';
     NotifiactionsModule,
     AuthModule,
     AdminModule,
+    ScraperModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ScrapperService],
 })
 export class AppModule {}
