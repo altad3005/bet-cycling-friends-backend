@@ -1,4 +1,4 @@
-export interface ScraperRaceResult {
+export abstract class ScraperRaceResult {
   /**
    * Récupère le top 10 des résultats d'une course, d'un stage ou du classement général (GC) d'une course par étapes.
    *
@@ -17,5 +17,9 @@ export interface ScraperRaceResult {
    *                         - `uciPoints`: Points UCI attribués pour ce résultat
    *                         - `time`: Temps ou écart sur le leader (si disponible)
    */
-  getTop10(raceId: string, isGc?: boolean, stage?: string): Promise<any>;
+  abstract getTop10(
+    raceId: string,
+    isGc?: boolean,
+    stage?: string,
+  ): Promise<any>;
 }

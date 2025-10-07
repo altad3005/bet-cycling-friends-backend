@@ -1,16 +1,17 @@
-import { ScraperStartlist } from '../interfaces/scraper-startlist.interface';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { Rider } from './domain/rider';
+import { ScraperStartlist } from './interfaces/scraper-startlist.interface';
 
 @Injectable()
 export class PcsStartlistService implements ScraperStartlist {
-  async getStartList(raceId: string): Promise<any> {
-    const url = `https://www.procyclingstats.com/race/${raceId}/startlist`;
+  async getStartList(raceId: string, year: string): Promise<Rider[]> {
+    const url = `https://www.procyclingstats.com/race/${raceId}/${year}/startlist`;
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
 
-    const riders: { name: string; team: string; country: string }[] = [];
+    const riders: Rider[] = [];
 
     $('ul.startlist_v4 > li').each((i, teamLi) => {
       const teamName = $(teamLi)
@@ -23,8 +24,8 @@ export class PcsStartlistService implements ScraperStartlist {
         .each((j, riderLi) => {
           const name = $(riderLi).find('a').text().trim();
           const flagClass = $(riderLi).find('span.flag').attr('class') || '';
-          const country = flagClass.split(' ')[1]; // ec, it, fr, etc.
-          riders.push({ name, team: teamName, country });
+          const country = flagClass.split(' ')[1] || '';
+          riders.push(new Rider(name, teamName, country));
         });
     });
 

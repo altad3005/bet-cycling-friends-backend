@@ -14,7 +14,6 @@ import { NotifiactionsModule } from './notifiactions/notifiactions.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { ScraperModule } from './scraper/scraper.module';
-import { ScrapperService } from './scrapper/scrapper.service';
 
 @Module({
   imports: [
@@ -45,6 +44,6 @@ import { ScrapperService } from './scrapper/scrapper.service';
     ScraperModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ScrapperService],
+  providers: [AppService],
 })
 export class AppModule {}

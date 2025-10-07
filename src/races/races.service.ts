@@ -1,26 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRaceDto } from './dto/create-race.dto';
-import { UpdateRaceDto } from './dto/update-race.dto';
+import { ScraperStartlist } from '../scraper/interfaces/scraper-startlist.interface';
 
 @Injectable()
 export class RacesService {
-  create(createRaceDto: CreateRaceDto) {
-    return 'This action adds a new race';
-  }
+  constructor(private readonly startlistScraperService: ScraperStartlist) {}
 
-  findAll() {
-    return `This action returns all races`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} race`;
-  }
-
-  update(id: number, updateRaceDto: UpdateRaceDto) {
-    return `This action updates a #${id} race`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} race`;
+  getStartlist(id: string) {
+    return this.startlistScraperService.getStartList(id, '2025'); // TODO: Ajouter la saison au course pour la récupérer dynamiquement
   }
 }

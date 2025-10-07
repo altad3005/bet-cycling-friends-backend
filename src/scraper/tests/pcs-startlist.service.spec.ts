@@ -1,5 +1,5 @@
 import { ScraperStartlist } from '../interfaces/scraper-startlist.interface';
-import { PcsStartlistService } from '../pcs_provider/pcs-startlist.service';
+import { PcsStartlistService } from '../pcs-startlist.service';
 
 describe('ScraperService', () => {
   let service: ScraperStartlist;

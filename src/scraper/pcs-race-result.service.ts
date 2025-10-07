@@ -1,4 +1,4 @@
-import { ScraperRaceResult } from '../interfaces/scraper-race-result.interface';
+import { ScraperRaceResult } from './interfaces/scraper-race-result.interface';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Injectable } from '@nestjs/common';
@@ -27,7 +27,7 @@ export class PcsRaceResultService implements ScraperRaceResult {
     }[] = [];
 
     $('table.results tbody tr').each((i, el) => {
-      if (i >= 10) return false; // on limite au top 10
+      if (i >= 10) return false;
 
       const rank = $(el).find('td').eq(0).text().trim();
       const age = $(el).find('td.age').text().trim();
@@ -35,7 +35,7 @@ export class PcsRaceResultService implements ScraperRaceResult {
       const riderName = riderEl.text().trim();
       const flagClass =
         $(el).find('td.ridername span.flag').attr('class') || '';
-      const country = flagClass.split(' ')[1]; // us, si, fr, etc.
+      const country = flagClass.split(' ')[1];
       const team = $(el).find('td.cu600 a').text().trim();
       const time = $(el).find('td.time font').text().trim() || '';
 

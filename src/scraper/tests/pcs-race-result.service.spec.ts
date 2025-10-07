@@ -1,5 +1,5 @@
 import { ScraperRaceResult } from '../interfaces/scraper-race-result.interface';
-import { PcsRaceResultService } from '../pcs_provider/pcs-race-result.service';
+import { PcsRaceResultService } from '../pcs-race-result.service';
 
 describe('PcsResultsService', () => {
   let service: ScraperRaceResult;
