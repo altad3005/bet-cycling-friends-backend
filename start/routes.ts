@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 
 import './routes/auth.js'
+import './routes/league.js'
 
 router.get('/', async () => {
   return {

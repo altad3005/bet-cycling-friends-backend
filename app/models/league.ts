@@ -15,7 +15,7 @@ export default class League extends BaseModel {
   @column()
   declare description: string
 
-  @column()
+  @column({ serializeAs: null })
   declare inviteCode: string
 
   @beforeCreate()
