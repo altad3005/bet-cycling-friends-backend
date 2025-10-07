@@ -32,7 +32,7 @@ export default class UserLeague extends BaseModel {
   @column({ consume: (value) => value ?? 0 })
   declare longestStreak: number
 
-  @column.dateTime()
+  @column.dateTime({ autoCreate: true })
   declare joinedAt: DateTime
 
   @column.dateTime({ autoCreate: true })

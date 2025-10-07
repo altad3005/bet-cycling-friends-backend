@@ -4,9 +4,13 @@ const LeaguesController = () => import('#controllers/leagues_controller')
 
 router
   .group(() => {
-    router.get('/', [LeaguesController, 'index'])
-    router.post('/', [LeaguesController, 'store']).middleware([middleware.auth()])
     router.get('/:id', [LeaguesController, 'show'])
-    router.delete('/:id', [LeaguesController, 'destroy']).middleware([middleware.auth()])
+
+    router
+      .group(() => {
+        router.post('/', [LeaguesController, 'store'])
+        router.delete('/:id', [LeaguesController, 'destroy'])
+      })
+      .use(middleware.auth())
   })
   .prefix('leagues')
