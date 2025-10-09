@@ -39,9 +39,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   })
   declare preferences: Record<string, any> | null
 
-  @column()
-  declare role: string
-
   @hasMany(() => League, {
     foreignKey: 'creatorId',
   })

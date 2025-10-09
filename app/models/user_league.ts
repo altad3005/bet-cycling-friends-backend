@@ -20,6 +20,9 @@ export default class UserLeague extends BaseModel {
   @belongsTo(() => League)
   declare league: BelongsTo<typeof League>
 
+  @column()
+  declare role: string
+
   @column({ consume: (value) => value ?? 0 })
   declare totalPoints: number
 
@@ -32,7 +35,7 @@ export default class UserLeague extends BaseModel {
   @column({ consume: (value) => value ?? 0 })
   declare longestStreak: number
 
-  @column.dateTime()
+  @column.dateTime({ autoCreate: true })
   declare joinedAt: DateTime
 
   @column.dateTime({ autoCreate: true })
