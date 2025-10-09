@@ -9,6 +9,7 @@ export default class LeaguesController {
   constructor(private leagueService: LeagueService) {}
 
   async store({ request, auth, response }: HttpContext) {
+    // TODO: add type for payload
     const payload = await request.validateUsing(createLeagueValidator)
     const user = await auth.authenticate()
 
