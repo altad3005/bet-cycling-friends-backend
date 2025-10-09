@@ -9,7 +9,6 @@ export default class LeaguesController {
   constructor(private leagueService: LeagueService) {}
 
   async store({ request, auth, response }: HttpContext) {
-    // TODO: add type for payload
     const payload = await request.validateUsing(createLeagueValidator)
     const user = await auth.authenticate()
 
@@ -25,16 +24,21 @@ export default class LeaguesController {
     let canViewInviteCode = false
 
     if (user) {
-      const role = await this.leagueService.getRoleUser(user.id, league.id)
-      canViewInviteCode = await bouncer.with('LeaguePolicy').allows('viewInviteCode', league, role)
+      const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
+      canViewInviteCode = await bouncer
+        .with('LeaguePolicy')
+        .allows('viewInviteCode', league, userLeague)
     }
 
     return response.ok(league.serializeForUser(canViewInviteCode))
   }
 
-  async destroy({ bouncer, params, response }: HttpContext) {
+  async destroy({ auth, bouncer, params, response }: HttpContext) {
+    const user = await auth.authenticate()
     const league = await League.findOrFail(params.id)
-    await bouncer.with('LeaguePolicy').authorize('delete', league)
+    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
+
+    await bouncer.with('LeaguePolicy').authorize('delete', league, userLeague)
 
     await league.delete()
     return response.noContent()
@@ -50,5 +54,27 @@ export default class LeaguesController {
       userId: user.id,
     })
     return response.ok(joinedLeague)
+  }
+
+  async removeMember({ auth, bouncer, params, response }: HttpContext) {
+    const user = await auth.authenticate()
+    const league = await League.findOrFail(params.leagueId)
+    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
+
+    await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)
+
+    await this.leagueService.removeUserFromLeague(params.userId, league.id)
+    return response.noContent()
+  }
+
+  async promoteMember({ auth, bouncer, params, response }: HttpContext) {
+    const user = await auth.authenticate()
+    const league = await League.findOrFail(params.leagueId)
+    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
+
+    await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)
+
+    const updatedMember = await this.leagueService.updateUserRole(params.userId, league.id, 'admin')
+    return response.ok(updatedMember)
   }
 }

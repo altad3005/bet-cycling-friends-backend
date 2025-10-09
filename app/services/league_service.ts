@@ -49,12 +49,32 @@ export class LeagueService {
     })
   }
 
-  async getRoleUser(userId: number, leagueId: number) {
-    const membership = await UserLeague.query()
+  async getUserLeague(userId: number, leagueId: number): Promise<UserLeague | null> {
+    return await UserLeague.query().where('user_id', userId).andWhere('league_id', leagueId).first()
+  }
+
+  async removeUserFromLeague(userId: number, leagueId: number): Promise<void> {
+    const userLeague = await UserLeague.query()
       .where('user_id', userId)
       .andWhere('league_id', leagueId)
       .first()
 
-    return membership ? membership.role : 'member'
+    if (!userLeague) {
+      throw new Error('User is not a member of this league')
+    }
+
+    await userLeague.delete()
+  }
+
+  async updateUserRole(userId: number, leagueId: number, newRole: string): Promise<UserLeague> {
+    const userLeague = await UserLeague.query()
+      .where('user_id', userId)
+      .andWhere('league_id', leagueId)
+      .firstOrFail()
+
+    userLeague.role = newRole
+    await userLeague.save()
+
+    return userLeague
   }
 }

@@ -10,6 +10,8 @@ router
         router.post('/', [LeaguesController, 'store'])
         router.post('/join', [LeaguesController, 'joinByCode'])
         router.delete('/:id', [LeaguesController, 'destroy'])
+        router.delete('/:leagueId/members/:userId', [LeaguesController, 'removeMember'])
+        router.post('/:leagueId/members/:userId/promote', [LeaguesController, 'promoteMember'])
       })
       .use(middleware.auth())
   })
