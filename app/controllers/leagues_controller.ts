@@ -55,26 +55,4 @@ export default class LeaguesController {
     })
     return response.ok(joinedLeague)
   }
-
-  async removeMember({ auth, bouncer, params, response }: HttpContext) {
-    const user = await auth.authenticate()
-    const league = await League.findOrFail(params.leagueId)
-    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
-
-    await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)
-
-    await this.leagueService.removeUserFromLeague(params.userId, league.id)
-    return response.noContent()
-  }
-
-  async promoteMember({ auth, bouncer, params, response }: HttpContext) {
-    const user = await auth.authenticate()
-    const league = await League.findOrFail(params.leagueId)
-    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
-
-    await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)
-
-    const updatedMember = await this.leagueService.updateUserRole(params.userId, league.id, 'admin')
-    return response.ok(updatedMember)
-  }
 }
