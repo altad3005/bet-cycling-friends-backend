@@ -10,3 +10,4 @@
 import './routes/auth.js'
 import './routes/league.js'
 import './routes/user.js'
+import './routes/admin.js'

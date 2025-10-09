@@ -53,9 +53,17 @@ export class LeagueService {
     return await UserLeague.query().where('user_id', userId).andWhere('league_id', leagueId).first()
   }
 
-  async removeUserFromLeague(userId: number, leagueId: number): Promise<void> {
+  async removeUserFromLeague(
+    targetUserId: number,
+    leagueId: number,
+    currentUserId?: number
+  ): Promise<void> {
+    if (currentUserId && targetUserId === currentUserId) {
+      throw new Error('Vous ne pouvez pas vous retirer vous-même de la ligue.')
+    }
+
     const userLeague = await UserLeague.query()
-      .where('user_id', userId)
+      .where('user_id', targetUserId)
       .andWhere('league_id', leagueId)
       .first()
 

@@ -1,9 +1,5 @@
 import vine from '@vinejs/vine'
 
-/**
- * Validator to validate the payload when creating
- * a new league.
- */
 export const createLeagueValidator = vine.compile(
   vine.object({
     name: vine.string().minLength(3).maxLength(50),
@@ -23,5 +19,12 @@ export const joinLeagueValidator = vine.compile(
   vine.object({
     leagueId: vine.number().min(1),
     inviteCode: vine.string().minLength(2).maxLength(20),
+  })
+)
+
+export const paramsValidator = vine.compile(
+  vine.object({
+    leagueId: vine.number().positive(),
+    userId: vine.number().positive(),
   })
 )
