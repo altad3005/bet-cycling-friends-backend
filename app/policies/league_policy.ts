@@ -8,7 +8,7 @@ export default class LeaguePolicy extends BasePolicy {
     return user.id === league.creatorId
   }
 
-  viewInviteCode(user: User, league: League): AuthorizerResponse {
-    return user.id === league.creatorId
+  viewInviteCode(user: User, league: League, role: string): AuthorizerResponse {
+    return user.id === league.creatorId || role === 'admin'
   }
 }

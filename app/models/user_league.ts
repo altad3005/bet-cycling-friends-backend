@@ -20,6 +20,9 @@ export default class UserLeague extends BaseModel {
   @belongsTo(() => League)
   declare league: BelongsTo<typeof League>
 
+  @column()
+  declare role: string
+
   @column({ consume: (value) => value ?? 0 })
   declare totalPoints: number
 

@@ -17,6 +17,7 @@ export class LeagueService {
         {
           userId: creatorId,
           leagueId: league.id,
+          role: 'admin',
         },
         { client: trx }
       )
@@ -46,5 +47,14 @@ export class LeagueService {
       userId,
       leagueId,
     })
+  }
+
+  async getRoleUser(userId: number, leagueId: number) {
+    const membership = await UserLeague.query()
+      .where('user_id', userId)
+      .andWhere('league_id', leagueId)
+      .first()
+
+    return membership ? membership.role : 'member'
   }
 }

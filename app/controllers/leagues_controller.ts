@@ -19,12 +19,15 @@ export default class LeaguesController {
   }
 
   async show({ auth, bouncer, params, response }: HttpContext) {
-    const league = await League.findOrFail(params.id)
     const user = await auth.authenticate().catch(() => null)
+    const league = await League.findOrFail(params.id)
 
-    const canViewInviteCode = user
-      ? await bouncer.with('LeaguePolicy').allows('viewInviteCode', league)
-      : false
+    let canViewInviteCode = false
+
+    if (user) {
+      const role = await this.leagueService.getRoleUser(user.id, league.id)
+      canViewInviteCode = await bouncer.with('LeaguePolicy').allows('viewInviteCode', league, role)
+    }
 
     return response.ok(league.serializeForUser(canViewInviteCode))
   }
