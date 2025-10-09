@@ -7,4 +7,8 @@ export default class LeaguePolicy extends BasePolicy {
   delete(user: User, league: League): AuthorizerResponse {
     return user.id === league.creatorId
   }
+
+  viewInviteCode(user: User, league: League): AuthorizerResponse {
+    return user.id === league.creatorId
+  }
 }

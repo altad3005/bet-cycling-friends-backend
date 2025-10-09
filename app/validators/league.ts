@@ -19,6 +19,9 @@ export const createLeagueValidator = vine.compile(
   })
 )
 
-export const updateLeagueValidator = vine.compile(
-  vine.object({})
+export const joinLeagueValidator = vine.compile(
+  vine.object({
+    leagueId: vine.number().min(1),
+    inviteCode: vine.string().minLength(2).maxLength(20),
+  })
 )

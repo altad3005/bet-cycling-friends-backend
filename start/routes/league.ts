@@ -5,10 +5,10 @@ const LeaguesController = () => import('#controllers/leagues_controller')
 router
   .group(() => {
     router.get('/:id', [LeaguesController, 'show'])
-
     router
       .group(() => {
         router.post('/', [LeaguesController, 'store'])
+        router.post('/join', [LeaguesController, 'joinByCode'])
         router.delete('/:id', [LeaguesController, 'destroy'])
       })
       .use(middleware.auth())

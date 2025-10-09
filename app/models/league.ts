@@ -15,7 +15,7 @@ export default class League extends BaseModel {
   @column()
   declare description: string
 
-  @column({ serializeAs: null })
+  @column()
   declare inviteCode: string
 
   @beforeCreate()
@@ -48,4 +48,12 @@ export default class League extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  public serializeForUser(canViewInviteCode: boolean) {
+    const data = this.serialize()
+    if (!canViewInviteCode) {
+      delete data.inviteCode
+    }
+    return data
+  }
 }

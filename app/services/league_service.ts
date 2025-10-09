@@ -24,4 +24,27 @@ export class LeagueService {
       return league
     })
   }
+
+  async addUserToLeagueByCode(param: { leagueId: number; inviteCode: string; userId: number }) {
+    const { leagueId, inviteCode, userId } = param
+    const league = await League.findByOrFail('id', leagueId)
+
+    if (league.inviteCode !== inviteCode) {
+      throw new Error('Invalid invite code')
+    }
+
+    const existingMembership = await UserLeague.query()
+      .where('user_id', userId)
+      .andWhere('league_id', leagueId)
+      .first()
+
+    if (existingMembership) {
+      throw new Error('User is already a member of this league')
+    }
+
+    return await UserLeague.create({
+      userId,
+      leagueId,
+    })
+  }
 }

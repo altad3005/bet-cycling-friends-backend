@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import League from '#models/league'
-import { createLeagueValidator } from '#validators/league'
+import { createLeagueValidator, joinLeagueValidator } from '#validators/league'
 import { inject } from '@adonisjs/core'
 import { LeagueService } from '#services/league_service'
 
@@ -17,9 +17,15 @@ export default class LeaguesController {
     return response.created(league)
   }
 
-  async show({ params, response }: HttpContext) {
+  async show({ auth, bouncer, params, response }: HttpContext) {
     const league = await League.findOrFail(params.id)
-    return response.ok(league)
+    const user = await auth.authenticate().catch(() => null)
+
+    const canViewInviteCode = user
+      ? await bouncer.with('LeaguePolicy').allows('viewInviteCode', league)
+      : false
+
+    return response.ok(league.serializeForUser(canViewInviteCode))
   }
 
   async destroy({ bouncer, params, response }: HttpContext) {
@@ -28,5 +34,17 @@ export default class LeaguesController {
 
     await league.delete()
     return response.noContent()
+  }
+
+  async joinByCode({ auth, request, response }: HttpContext) {
+    const { leagueId, inviteCode } = await request.validateUsing(joinLeagueValidator)
+    const user = await auth.authenticate()
+
+    const joinedLeague = await this.leagueService.addUserToLeagueByCode({
+      leagueId: leagueId,
+      inviteCode: inviteCode,
+      userId: user.id,
+    })
+    return response.ok(joinedLeague)
   }
 }
