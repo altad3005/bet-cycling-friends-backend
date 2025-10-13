@@ -10,7 +10,7 @@ router
         router.post('/', [LeaguesController, 'store'])
         router.post('/join', [LeaguesController, 'joinByCode'])
         router.delete('/:id', [LeaguesController, 'destroy'])
-        })
+      })
       .use(middleware.auth())
   })
   .prefix('leagues')
