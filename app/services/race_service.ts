@@ -1,14 +1,19 @@
-import axios from 'axios'
-import { DateTime } from 'luxon'
+import { CyclingApiAdapter } from '#services/adapter/adapter_interface'
+import { PCSAdapter } from '#services/adapter/pcs_adapter'
+
 
 export class RaceService {
-  async getPCSResults(slug: string) {
-    const res = await axios.get(`http://127.0.0.1:8001/race/${slug}`)
-    return res.data
+  private adapter: CyclingApiAdapter
+
+  constructor(adapter: CyclingApiAdapter = new PCSAdapter()) {
+    this.adapter = adapter
   }
 
-  async getPCSStartlist(slug: string, year: string = DateTime.now().year.toString()) {
-    const res = await axios.get(`http://127.0.0.1:8001/race/${slug}/${year}/startlist`)
-    return res.data
+  async getResultsGc(slug: string, year?: string) {
+    return this.adapter.getResultsGc(slug, year)
+  }
+
+  async getStartlist(slug: string, year?: string) {
+    return this.adapter.getStartlist(slug, year)
   }
 }
