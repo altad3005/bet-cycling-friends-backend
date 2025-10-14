@@ -15,21 +15,28 @@ export default class PredictionsController {
     return await this.predictionService.createPrediction(user.id, raceId, favoriteRider)
   }
 
-  async show({ params }: HttpContext) {
-    const predictionId = params.id
-    const prediction = await this.predictionService.getPredictionById(predictionId)
+  async show({ params, bouncer }: HttpContext) {
+    const prediction = await this.predictionService.getPredictionById(params.id)
+
+    await bouncer.with('PredictionPolicy').authorize('view', prediction)
+
     return { data: prediction }
   }
 
-  async update({ params, request }: HttpContext) {
+  async update({ params, request, bouncer }: HttpContext) {
     const { favoriteRider } = await request.validateUsing(UpdatePredictionValidator)
-    const predictionId = params.id
-    return await this.predictionService.updatePrediction(predictionId, favoriteRider)
+    const prediction = await this.predictionService.getPredictionById(params.id)
+
+    await bouncer.with('PredictionPolicy').authorize('update', prediction)
+
+    return await this.predictionService.updatePrediction(prediction.id, favoriteRider)
   }
 
-  async destroy({ params }: HttpContext) {
-    const predictionId = params.id
-    const prediction = await this.predictionService.getPredictionById(predictionId)
+  async destroy({ params, bouncer }: HttpContext) {
+    const prediction = await this.predictionService.getPredictionById(params.id)
+
+    await bouncer.with('PredictionPolicy').authorize('delete', prediction)
+
     await prediction.delete()
     return { message: 'Prediction deleted successfully' }
   }
