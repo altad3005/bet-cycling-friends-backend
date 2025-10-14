@@ -9,6 +9,12 @@ export class PCSAdapter implements CyclingApiAdapter {
     this.baseUrl = baseUrl
   }
 
+  async getResultsStage(raceSlug: string, stageNumber: string, year: any): Promise<any> {
+    const res = axios.get(`${this.baseUrl}/race/${year}/${raceSlug}/stage/${stageNumber}`)
+    const response = await res
+    return response.data
+  }
+
   async getResultsGc(slug: string, year: string = DateTime.now().year.toString()) {
     const res = await axios.get(`${this.baseUrl}/race/${slug}/${year}/gc`)
     return res.data

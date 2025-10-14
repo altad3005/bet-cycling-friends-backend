@@ -13,10 +13,18 @@ export default class RacesController {
     return response.ok(startlist)
   }
 
-  async results({ params, response }: HttpContext) {
+  async resultsGc({ params, response }: HttpContext) {
     const raceSlug = params.slug
     const year = params.year
     const results = await this.raceService.getResultsGc(raceSlug, year)
+    return response.ok(results)
+  }
+
+  async resultsStages({ params, response }: HttpContext) {
+    const raceSlug = params.slug
+    const year = params.year
+    const stageNumber = params.stageNumber
+    const results = await this.raceService.getResultsStage(raceSlug, stageNumber, year)
     return response.ok(results)
   }
 }
