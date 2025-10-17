@@ -5,13 +5,13 @@ import { DateTime } from 'luxon'
 export class PredictionService {
   async createPrediction(userId: number, raceId: number, favoriRider: string) {
     const race = await Race.findOrFail(raceId)
-    if (race.predictionDeadline <= DateTime.now()) {
+    if (race.startDate <= DateTime.now()) {
       throw new Error('Predictions are closed for this race.')
     }
     await Prediction.create({
-      userId: userId,
-      raceId: raceId,
-      riderName: favoriRider,
+      idUser: userId,
+      idRace: raceId,
+      favorite: favoriRider,
     })
   }
 
@@ -21,12 +21,12 @@ export class PredictionService {
 
   async updatePrediction(predictionId: number, favoriteRider: string) {
     const prediction = await this.getPredictionById(predictionId)
-    const race = await Race.findOrFail(prediction.raceId)
-    if (race.predictionDeadline <= DateTime.now()) {
+    const race = await Race.findOrFail(prediction.idRace)
+    if (race.startDate <= DateTime.now()) {
       throw new Error('Predictions are closed for this race.')
     }
 
-    prediction.riderName = favoriteRider
+    prediction.favorite = favoriteRider
     await prediction.save()
     return prediction
   }

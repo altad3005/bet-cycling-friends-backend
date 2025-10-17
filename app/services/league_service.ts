@@ -1,6 +1,6 @@
 import db from '@adonisjs/lucid/services/db'
 import League from '#models/league'
-import UserLeague from '#models/user_league'
+import LeagueMember from '#models/league_member'
 
 export class LeagueService {
   async createLeagueWithCreator(payload: any, creatorId: number) {
@@ -13,7 +13,7 @@ export class LeagueService {
         { client: trx }
       )
 
-      await UserLeague.create(
+      await LeagueMember.create(
         {
           userId: creatorId,
           leagueId: league.id,
@@ -34,7 +34,7 @@ export class LeagueService {
       throw new Error('Invalid invite code')
     }
 
-    const existingMembership = await UserLeague.query()
+    const existingMembership = await LeagueMember.query()
       .where('user_id', userId)
       .andWhere('league_id', leagueId)
       .first()
@@ -43,14 +43,17 @@ export class LeagueService {
       throw new Error('User is already a member of this league')
     }
 
-    return await UserLeague.create({
+    return await LeagueMember.create({
       userId,
       leagueId,
     })
   }
 
-  async getUserLeague(userId: number, leagueId: number): Promise<UserLeague | null> {
-    return await UserLeague.query().where('user_id', userId).andWhere('league_id', leagueId).first()
+  async getUserLeague(userId: number, leagueId: number): Promise<LeagueMember | null> {
+    return await LeagueMember.query()
+      .where('user_id', userId)
+      .andWhere('league_id', leagueId)
+      .first()
   }
 
   async removeUserFromLeague(
@@ -62,7 +65,7 @@ export class LeagueService {
       throw new Error('Vous ne pouvez pas vous retirer vous-même de la ligue.')
     }
 
-    const userLeague = await UserLeague.query()
+    const userLeague = await LeagueMember.query()
       .where('user_id', targetUserId)
       .andWhere('league_id', leagueId)
       .first()
@@ -74,8 +77,8 @@ export class LeagueService {
     await userLeague.delete()
   }
 
-  async updateUserRole(userId: number, leagueId: number, newRole: string): Promise<UserLeague> {
-    const userLeague = await UserLeague.query()
+  async updateUserRole(userId: number, leagueId: number, newRole: string): Promise<LeagueMember> {
+    const userLeague = await LeagueMember.query()
       .where('user_id', userId)
       .andWhere('league_id', leagueId)
       .firstOrFail()

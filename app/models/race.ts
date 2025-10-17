@@ -1,19 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
-import Prediction from '#models/prediction'
-
-export enum RaceType {
-  ONE_DAY = 'one_day',
-  STAGE = 'stage',
-  GRAND_TOUR = 'grand_tour',
-}
-
-export enum RaceStatus {
-  UPCOMING = 'upcoming',
-  ONGOING = 'ongoing',
-  FINISHED = 'finished',
-}
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Season from './season.js'
+import Prediction from './prediction.js'
+import GTTeam from '#models/gt_team'
+import Startlist from '#models/startlist'
 
 export default class Race extends BaseModel {
   @column({ isPrimary: true })
@@ -23,47 +14,29 @@ export default class Race extends BaseModel {
   declare name: string
 
   @column()
-  declare description: string | null
+  declare type: string
 
-  @column()
-  declare type: RaceType
-
-  @column()
-  declare status: RaceStatus
-
-  @column.dateTime()
+  @column.date()
   declare startDate: DateTime
 
-  @column.dateTime()
-  declare endDate: DateTime | null
+  @column.date()
+  declare endDate: DateTime
 
-  @column.dateTime()
-  declare predictionDeadline: DateTime
+  @column()
+  declare maxBudget: number
 
-  @column({
-    serialize: (value) => value,
-    prepare: (value) => JSON.stringify(value),
-  })
-  declare startlist: string[] | null
+  @column()
+  declare idSeason: number
 
-  @column({
-    serialize: (value) => value,
-    prepare: (value) => JSON.stringify(value),
-  })
-  declare results: Record<string, any> | null
-
-  @column({
-    serialize: (value) => value,
-    prepare: (value) => JSON.stringify(value),
-  })
-  declare profile: Record<string, any> | null
+  @belongsTo(() => Season)
+  declare season: BelongsTo<typeof Season>
 
   @hasMany(() => Prediction)
   declare predictions: HasMany<typeof Prediction>
 
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
+  @hasMany(() => GTTeam)
+  declare gtTeams: HasMany<typeof GTTeam>
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime
+  @hasMany(() => Startlist)
+  declare startlist: HasMany<typeof Startlist>
 }

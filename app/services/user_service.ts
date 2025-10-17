@@ -1,8 +1,8 @@
-import UserLeague from '#models/user_league'
+import LeagueMember from '#models/league_member'
 
 export class UserService {
   async getUserLeagues(userId: number) {
-    return UserLeague.query()
+    return LeagueMember.query()
       .where('user_id', userId)
       .preload('league', (leagueQuery) => {
         leagueQuery.preload('creator')

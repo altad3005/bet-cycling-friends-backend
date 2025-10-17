@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
-import UserLeague from '#models/user_league'
+import LeagueMember from '#models/league_member'
 import User from '#models/user'
 import { randomUUID } from 'node:crypto'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Season from '#models/season'
 
 export default class League extends BaseModel {
   @column({ isPrimary: true })
@@ -24,15 +25,6 @@ export default class League extends BaseModel {
   }
 
   @column()
-  declare isPublic: boolean
-
-  @column({
-    serialize: (value) => value,
-    prepare: (value) => JSON.stringify(value),
-  })
-  declare settings: Record<string, any>
-
-  @column()
   declare creatorId: number
 
   @belongsTo(() => User, {
@@ -40,8 +32,11 @@ export default class League extends BaseModel {
   })
   declare creator: BelongsTo<typeof User>
 
-  @hasMany(() => UserLeague)
-  declare userLeagues: HasMany<typeof UserLeague>
+  @hasMany(() => LeagueMember)
+  declare members: HasMany<typeof LeagueMember>
+
+  @belongsTo(() => Season)
+  declare season: BelongsTo<typeof Season>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

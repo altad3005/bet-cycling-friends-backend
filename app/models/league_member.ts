@@ -4,7 +4,7 @@ import User from '#models/user'
 import League from '#models/league'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
-export default class UserLeague extends BaseModel {
+export default class LeagueMember extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
@@ -22,18 +22,6 @@ export default class UserLeague extends BaseModel {
 
   @column()
   declare role: string
-
-  @column({ consume: (value) => value ?? 0 })
-  declare totalPoints: number
-
-  @column({ consume: (value) => value ?? 0 })
-  declare exactWins: number
-
-  @column({ consume: (value) => value ?? 0 })
-  declare podiums: number
-
-  @column({ consume: (value) => value ?? 0 })
-  declare longestStreak: number
 
   @column.dateTime({ autoCreate: true })
   declare joinedAt: DateTime
