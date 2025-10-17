@@ -13,5 +13,6 @@
 */
 
 export const policies = {
-  LeaguePolicy: () => import('#policies/league_policy')
+  PredictionPolicy: () => import('#policies/prediction_policy'),
+  LeaguePolicy: () => import('#policies/league_policy'),
 }

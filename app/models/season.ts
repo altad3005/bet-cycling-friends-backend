@@ -1,0 +1,25 @@
+import { DateTime } from 'luxon'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import League from './league.js'
+import Race from './race.js'
+
+export default class Season extends BaseModel {
+  @column({ isPrimary: true })
+  declare id: number
+
+  @column()
+  declare year: number
+
+  @column.date()
+  declare startDate: DateTime
+
+  @column.date()
+  declare endDate: DateTime
+
+  @hasMany(() => League)
+  declare leagues: HasMany<typeof League>
+
+  @hasMany(() => Race)
+  declare races: HasMany<typeof Race>
+}
