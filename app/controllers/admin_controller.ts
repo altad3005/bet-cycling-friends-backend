@@ -17,7 +17,7 @@ export default class AdminController {
     await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)
 
     await this.leagueService.removeUserFromLeague(userId, league.id, user.id)
-    return response.noContent()
+    return response.ok({ message: 'Member removed successfully' })
   }
 
   async promoteMember({ auth, bouncer, response, params }: HttpContext) {
@@ -32,6 +32,6 @@ export default class AdminController {
       params.leagueId,
       'admin'
     )
-    return response.ok(updatedMember)
+    return response.ok({ message: 'Member promoted successfully', data: updatedMember })
   }
 }

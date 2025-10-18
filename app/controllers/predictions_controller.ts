@@ -7,37 +7,42 @@ import { CreatePredictionValidator, UpdatePredictionValidator } from '#validator
 export default class PredictionsController {
   constructor(private predictionService: PredictionService) {}
 
-  async store({ request, auth, params }: HttpContext) {
+  async store({ request, auth, params, response }: HttpContext) {
     const { favoriteRider } = await request.validateUsing(CreatePredictionValidator)
     const raceId = params.raceId
     const user = await auth.authenticate()
 
-    return await this.predictionService.createPrediction(user.id, raceId, favoriteRider)
+    await this.predictionService.createPrediction(user.id, raceId, favoriteRider)
+
+    return response.created({ message: 'Prediction created successfully' })
   }
 
-  async show({ params, bouncer }: HttpContext) {
+  async show({ params, bouncer, response }: HttpContext) {
     const prediction = await this.predictionService.getPredictionById(params.id)
 
     await bouncer.with('PredictionPolicy').authorize('view', prediction)
 
-    return { data: prediction }
+    return response.ok({ message: 'Prediction retrieved successfully', data: prediction })
   }
 
-  async update({ params, request, bouncer }: HttpContext) {
+  async update({ params, request, bouncer, response }: HttpContext) {
     const { favoriteRider } = await request.validateUsing(UpdatePredictionValidator)
     const prediction = await this.predictionService.getPredictionById(params.id)
 
     await bouncer.with('PredictionPolicy').authorize('update', prediction)
 
-    return await this.predictionService.updatePrediction(prediction.id, favoriteRider)
+    await this.predictionService.updatePrediction(prediction.id, favoriteRider)
+
+    return response.ok({ message: 'Updated successfully', data: prediction })
   }
 
-  async destroy({ params, bouncer }: HttpContext) {
+  async destroy({ params, bouncer, response }: HttpContext) {
     const prediction = await this.predictionService.getPredictionById(params.id)
 
     await bouncer.with('PredictionPolicy').authorize('delete', prediction)
 
     await prediction.delete()
-    return { message: 'Prediction deleted successfully' }
+
+    return response.ok({ message: 'Deleted successfully', data: prediction })
   }
 }

@@ -14,23 +14,20 @@ export default class LeaguesController {
 
     const league = await this.leagueService.createLeagueWithCreator(payload, user.id)
 
-    return response.created(league)
+    return response.created({ message: 'League created successfully', data: league })
   }
 
   async show({ auth, bouncer, params, response }: HttpContext) {
-    const user = await auth.authenticate().catch(() => null)
+    const user = await auth.authenticate()
     const league = await League.findOrFail(params.id)
 
-    let canViewInviteCode = false
+    const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
 
-    if (user) {
-      const userLeague = await this.leagueService.getUserLeague(user.id, league.id)
-      canViewInviteCode = await bouncer
-        .with('LeaguePolicy')
-        .allows('viewInviteCode', league, userLeague)
-    }
+    league.$extras.canViewInviteCode = await bouncer
+      .with('LeaguePolicy')
+      .allows('viewInviteCode', league, userLeague)
 
-    return response.ok(league.serializeForUser(canViewInviteCode))
+    return response.ok({ message: 'League retrieved successfully', data: league })
   }
 
   async destroy({ auth, bouncer, params, response }: HttpContext) {
@@ -41,7 +38,7 @@ export default class LeaguesController {
     await bouncer.with('LeaguePolicy').authorize('delete', league, userLeague)
 
     await league.delete()
-    return response.noContent()
+    return response.ok({ message: 'League deleted successfully' })
   }
 
   async joinByCode({ auth, request, response }: HttpContext) {
@@ -53,6 +50,6 @@ export default class LeaguesController {
       inviteCode: inviteCode,
       userId: user.id,
     })
-    return response.ok(joinedLeague)
+    return response.ok({ message: 'Joined league successfully', data: joinedLeague })
   }
 }

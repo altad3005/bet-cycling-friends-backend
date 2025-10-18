@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, computed, hasMany } from '@adonisjs/lucid/orm'
 import LeagueMember from '#models/league_member'
 import User from '#models/user'
 import { randomUUID } from 'node:crypto'
@@ -16,7 +16,7 @@ export default class League extends BaseModel {
   @column()
   declare description: string
 
-  @column()
+  @column({ serializeAs: null })
   declare inviteCode: string
 
   @beforeCreate()
@@ -44,11 +44,8 @@ export default class League extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  public serializeForUser(canViewInviteCode: boolean) {
-    const data = this.serialize()
-    if (!canViewInviteCode) {
-      delete data.inviteCode
-    }
-    return data
+  @computed()
+  public get displayInviteCode(): string | null {
+    return this.$extras.canViewInviteCode ? this.inviteCode : null
   }
 }
