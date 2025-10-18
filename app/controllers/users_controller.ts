@@ -9,6 +9,6 @@ export default class UsersController {
   async leagues({ auth, response }: HttpContext) {
     const user = await auth.authenticate()
     const leagues = await this.userService.getUserLeagues(user.id)
-    return response.ok(leagues)
+    return response.ok({ message: 'User leagues retrieved successfully', data: leagues })
   }
 }

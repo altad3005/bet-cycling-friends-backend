@@ -10,8 +10,11 @@ export default class AuthController {
     const token = await User.accessTokens.create(user)
 
     return response.ok({
-      token: token,
-      ...user.serialize(),
+      message: 'Login successful',
+      data: {
+        user: user.serialize(),
+        token,
+      },
     })
   }
   async register({ request, response }: HttpContext) {
@@ -19,10 +22,10 @@ export default class AuthController {
 
     const user = await User.create(payload)
 
-    return response.created(user)
+    return response.created({ message: 'User registered successfully', data: user })
   }
   async me({ auth, response }: HttpContext) {
     const user = await auth.getUserOrFail()
-    return response.ok(user)
+    return response.ok({ message: 'User retrieved successfully', data: user })
   }
 }
