@@ -17,7 +17,16 @@ export default class Prediction extends BaseModel {
   declare idRace: number
 
   @column()
-  declare favorite: string
+  declare favoriteRider: string
+
+  @column()
+  declare placementFavoriteRider: number
+
+  @column()
+  declare bonusRider: string
+
+  @column()
+  declare placementBonusRider: number
 
   @column()
   declare idBonus: number | null

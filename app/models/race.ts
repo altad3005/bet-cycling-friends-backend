@@ -14,7 +14,13 @@ export default class Race extends BaseModel {
   declare name: string
 
   @column()
+  declare slug: string
+
+  @column()
   declare type: string
+
+  @column()
+  declare multiplicator: number
 
   @column.date()
   declare startDate: DateTime

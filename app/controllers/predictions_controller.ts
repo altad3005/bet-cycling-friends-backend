@@ -8,11 +8,11 @@ export default class PredictionsController {
   constructor(private predictionService: PredictionService) {}
 
   async store({ request, auth, params, response }: HttpContext) {
-    const { favoriteRider } = await request.validateUsing(CreatePredictionValidator)
+    const { favoriteRider, bonusRider } = await request.validateUsing(CreatePredictionValidator)
     const raceId = params.raceId
     const user = await auth.authenticate()
 
-    await this.predictionService.createPrediction(user.id, raceId, favoriteRider)
+    await this.predictionService.createPrediction(user.id, raceId, favoriteRider, bonusRider)
 
     return response.created({ message: 'Prediction created successfully' })
   }
@@ -26,12 +26,12 @@ export default class PredictionsController {
   }
 
   async update({ params, request, bouncer, response }: HttpContext) {
-    const { favoriteRider } = await request.validateUsing(UpdatePredictionValidator)
+    const { favoriteRider, bonusRider } = await request.validateUsing(UpdatePredictionValidator)
     const prediction = await this.predictionService.getPredictionById(params.id)
 
     await bouncer.with('PredictionPolicy').authorize('update', prediction)
 
-    await this.predictionService.updatePrediction(prediction.id, favoriteRider)
+    await this.predictionService.updatePrediction(prediction.id, favoriteRider, bonusRider)
 
     return response.ok({ message: 'Updated successfully', data: prediction })
   }

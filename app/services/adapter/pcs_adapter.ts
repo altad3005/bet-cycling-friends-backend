@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { DateTime } from 'luxon'
 import { CyclingApiAdapter } from '#services/adapter/adapter_interface'
+import { RaceResultDto } from '../../dto/race_result_dto.js'
 
 export class PCSAdapter implements CyclingApiAdapter {
   private readonly baseUrl: string
@@ -9,19 +10,24 @@ export class PCSAdapter implements CyclingApiAdapter {
     this.baseUrl = baseUrl
   }
 
-  async getResultsStage(raceSlug: string, stageNumber: string, year: any): Promise<any> {
-    const res = axios.get(`${this.baseUrl}/race/${year}/${raceSlug}/stage/${stageNumber}`)
-    const response = await res
-    return response.data
-  }
-
-  async getResultsGc(slug: string, year: string = DateTime.now().year.toString()) {
+  async getResultsGc(slug: string, year: number = DateTime.now().year): Promise<RaceResultDto[]> {
     const res = await axios.get(`${this.baseUrl}/race/${slug}/${year}/gc`)
-    return res.data
+    const json = res.data
+    return RaceResultDto.fromApiResponse(json)
   }
 
-  async getStartlist(slug: string, year: string = DateTime.now().year.toString()) {
+  async getStartlist(slug: string, year: number = DateTime.now().year): Promise<any> {
     const res = await axios.get(`${this.baseUrl}/race/${slug}/${year}/startlist`)
     return res.data
+  }
+
+  async getResultsStage(
+    raceSlug: string,
+    stageNumber: string,
+    year: number = DateTime.now().year
+  ): Promise<RaceResultDto[]> {
+    const res = await axios.get(`${this.baseUrl}/race/${year}/${raceSlug}/stage/${stageNumber}`)
+    const json = res.data
+    return RaceResultDto.fromApiResponse(json)
   }
 }

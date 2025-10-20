@@ -9,22 +9,7 @@ export default class RacesController {
   async startList({ params, response }: HttpContext) {
     const raceSlug = params.slug
     const year = params.year
-    const startlist = await this.raceService.getStartlist(raceSlug, year)
+    const startlist = await this.raceService.fetchStartlist(raceSlug, year)
     return response.ok({ message: 'Startlist retrieved successfully', data: startlist })
-  }
-
-  async resultsGc({ params, response }: HttpContext) {
-    const raceSlug = params.slug
-    const year = params.year
-    const results = await this.raceService.getResultsGc(raceSlug, year)
-    return response.ok({ message: 'GC Results retrieved successfully', data: results })
-  }
-
-  async resultsStages({ params, response }: HttpContext) {
-    const raceSlug = params.slug
-    const year = params.year
-    const stageNumber = params.stageNumber
-    const results = await this.raceService.getResultsStage(raceSlug, stageNumber, year)
-    return response.ok({ message: 'Stage Results retrieved successfully', data: results })
   }
 }
