@@ -14,6 +14,15 @@ export default class Races extends BaseSchema {
       table.date('end_date').notNullable()
       table.float('max_budget').notNullable()
       table.integer('season_id').unsigned().references('id').inTable('seasons').onDelete('CASCADE')
+      table.string('category').nullable()
+      table.integer('edition').nullable()
+      table.string('nationality', 5).nullable()
+      table.string('uci_tour').nullable()
+      table.boolean('is_one_day_race').defaultTo(false)
+      table.integer('year').nullable()
+      table.json('prev_editions').nullable()
+      table.json('stages_winners').nullable()
+
       table.timestamps(true)
     })
   }

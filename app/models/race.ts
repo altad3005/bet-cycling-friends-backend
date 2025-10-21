@@ -5,6 +5,7 @@ import Season from './season.js'
 import Prediction from './prediction.js'
 import GTTeam from '#models/gt_team'
 import Startlist from '#models/startlist'
+import RaceStage from '#models/race_stage'
 
 export default class Race extends BaseModel {
   @column({ isPrimary: true })
@@ -33,6 +34,33 @@ export default class Race extends BaseModel {
 
   @column()
   declare idSeason: number
+
+  @column()
+  declare category?: string
+
+  @column()
+  declare edition?: number
+
+  @column()
+  declare nationality?: string
+
+  @column()
+  declare uciTour?: string
+
+  @column()
+  declare isOneDayRace?: boolean
+
+  @column()
+  declare year?: number
+
+  @column()
+  declare prevEditions?: any
+
+  @hasMany(() => RaceStage)
+  declare stages: HasMany<typeof RaceStage>
+
+  @column()
+  declare stagesWinners?: any
 
   @belongsTo(() => Season)
   declare season: BelongsTo<typeof Season>

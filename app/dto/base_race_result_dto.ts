@@ -1,4 +1,3 @@
-// app/dto/base_race_result_dto.ts
 export interface BaseRaceResult {
   rider_name: string
   rider_url: string

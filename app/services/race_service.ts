@@ -2,8 +2,12 @@ import { CyclingApiAdapter } from '#services/adapter/adapter_interface'
 import { PCSAdapter } from '#services/adapter/pcs_adapter'
 import Race from '#models/race'
 import RaceResult from '#models/race_result'
+import RaceStage from '#models/race_stage'
 import db from '@adonisjs/lucid/services/db'
-import { GcResultDto } from '../dto/gc_result_dto.js'
+import { DateTime } from 'luxon'
+import { RaceStageDto } from '../dto/race_stage_dto.js'
+import { RaceInfoDto } from '../dto/race_info_dto.js'
+import Startlist from '#models/startlist'
 
 export class RaceService {
   private adapter: CyclingApiAdapter
@@ -12,19 +16,9 @@ export class RaceService {
     this.adapter = adapter
   }
 
-  /**
-   * Récupère les résultats GC depuis l'API PCS
-   */
-  async fetchResultsGc(slug: string, year?: number): Promise<GcResultDto[]> {
-    return await this.adapter.getResultsGc(slug, year)
-  }
-
-  /**
-   * Sauvegarde les résultats GC en base (et renvoie ceux enregistrés)
-   */
-  async saveResultsGc(slug: string, year?: number) {
+  async syncResultsGc(slug: string, year?: number) {
     const race = await Race.findByOrFail('slug', slug)
-    const dtos = await this.fetchResultsGc(slug, year)
+    const dtos = await this.adapter.getResultsGc(slug, year)
 
     await db.transaction(async (trx) => {
       for (const dto of dtos) {
@@ -37,9 +31,9 @@ export class RaceService {
     })
   }
 
-  async saveResultsStage(raceSlug: string, stageNumber: string, year?: number) {
+  async syncResultsStage(raceSlug: string, stageNumber: string, year?: number) {
     const race = await Race.findByOrFail('slug', raceSlug)
-    const dtos = await this.fetchResultsStage(raceSlug, stageNumber, year)
+    const dtos = await this.adapter.getResultsStage(raceSlug, stageNumber, year)
 
     await db.transaction(async (trx) => {
       for (const dto of dtos) {
@@ -52,17 +46,46 @@ export class RaceService {
     })
   }
 
-  /**
-   * Récupère la startlist (pas encore persistée)
-   */
-  async fetchStartlist(slug: string, year?: number) {
-    return await this.adapter.getStartlist(slug, year)
+  async syncRaceInfos(slug: string, year?: number) {
+    const raceJson = await this.adapter.getInfosRace(slug, year)
+    const raceInfo = RaceInfoDto.fromApiResponse(raceJson)
+
+    const race = await Race.updateOrCreate(
+      { slug },
+      {
+        ...raceInfo.toModel(),
+        startDate: DateTime.fromISO(raceInfo.startDate),
+        endDate: DateTime.fromISO(raceInfo.endDate),
+      }
+    )
+
+    const stagesDto = RaceStageDto.fromApiResponse(raceInfo.stages)
+
+    if (stagesDto.length > 0) {
+      await db.transaction(async (trx) => {
+        for (const [i, dto] of stagesDto.entries()) {
+          await RaceStage.updateOrCreate(
+            { raceId: race.id, stageNumber: i + 1 },
+            dto.toModel(race.id, i + 1),
+            { client: trx }
+          )
+        }
+      })
+    }
   }
 
-  /**
-   * Récupère les résultats d'étape (non sauvegardés)
-   */
-  async fetchResultsStage(raceSlug: string, stageNumber: string, year?: number) {
-    return await this.adapter.getResultsStage(raceSlug, stageNumber, year)
+  async syncStartlist(slug: string, year?: number) {
+    const race = await Race.findByOrFail('slug', slug)
+    const dtos = await this.adapter.getStartlist(slug, year)
+
+    await db.transaction(async (trx) => {
+      for (const dto of dtos) {
+        await Startlist.updateOrCreate(
+          { race_id: race.id, rider_id: dto.riderNumber },
+          dto.toModel(race.id),
+          { client: trx }
+        )
+      }
+    })
   }
 }
