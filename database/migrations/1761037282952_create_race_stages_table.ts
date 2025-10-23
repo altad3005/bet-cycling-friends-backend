@@ -20,7 +20,7 @@ export default class RaceStages extends BaseSchema {
       table.string('profile_icon').nullable()
       table.string('date').nullable()
 
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

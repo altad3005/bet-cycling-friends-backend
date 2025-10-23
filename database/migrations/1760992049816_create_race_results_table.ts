@@ -30,11 +30,9 @@ export default class RaceResultsSchema extends BaseSchema {
       table.string('time').notNullable()
       table.string('bonus_time').nullable()
 
-      table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
-      table.timestamp('updated_at', { useTz: true }).defaultTo(this.now())
-
-      // ✅ Empêche les doublons (un seul résultat par coureur et étape)
       table.unique(['race_id', 'rider_url', 'stage_number'])
+
+      table.timestamps(true, true)
     })
   }
 

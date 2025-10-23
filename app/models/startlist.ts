@@ -11,21 +11,24 @@ export default class Startlist extends BaseModel {
   declare race_id: number
 
   @column()
-  declare rider_id: number
+  declare rider_id: number | null
 
   @column()
-  declare rider_name: string
+  declare rider_name: string | null
 
   @column()
-  declare team_name: string
+  declare team_name: string | null
 
   @column()
-  declare uci_rank: number
+  declare uci_rank: number | null
 
   @column()
-  declare country: string
+  declare country: string | null
 
-  @column.dateTime()
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updated_at: DateTime
 
   @belongsTo(() => Race)

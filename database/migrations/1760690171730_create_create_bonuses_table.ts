@@ -13,7 +13,7 @@ export default class Bonuses extends BaseSchema {
       table.integer('season_limit').nullable()
       table.integer('race_limit').nullable()
       table.text('attribution_condition').nullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

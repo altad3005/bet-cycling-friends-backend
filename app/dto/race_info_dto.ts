@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export interface RaceInfo {
   category: string
   edition: number
@@ -27,18 +29,18 @@ export class RaceInfoDto {
   uciTour: string
   year: number
 
-  constructor(data: RaceInfo) {
+  constructor(data: any) {
     this.category = data.category
     this.edition = data.edition
-    this.endDate = data.enddate
-    this.isOneDayRace = data.is_one_day_race
+    this.endDate = data.enddate ?? data.endDate
+    this.isOneDayRace = data.is_one_day_race ?? data.isOneDayRace
     this.name = data.name
     this.nationality = data.nationality
-    this.prevEditions = data.prev_editions_select
+    this.prevEditions = data.prev_editions_select ?? data.prevEditions
     this.stages = data.stages
-    this.stagesWinners = data.stages_winners
-    this.startDate = data.startdate
-    this.uciTour = data.uci_tour
+    this.stagesWinners = data.stages_winners ?? data.stagesWinners
+    this.startDate = data.startdate ?? data.startDate
+    this.uciTour = data.uci_tour ?? data.uciTour
     this.year = data.year
   }
 
@@ -51,10 +53,11 @@ export class RaceInfoDto {
       uciTour: this.uciTour,
       isOneDayRace: this.isOneDayRace,
       year: this.year,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      prevEditions: this.prevEditions,
-      stagesWinners: this.stagesWinners,
+      startDate: this.startDate ? DateTime.fromISO(this.startDate) : null,
+      endDate: this.endDate ? DateTime.fromISO(this.endDate) : null,
+
+      prevEditions: JSON.stringify(this.prevEditions ?? []),
+      stagesWinners: JSON.stringify(this.stagesWinners ?? []),
     }
   }
 

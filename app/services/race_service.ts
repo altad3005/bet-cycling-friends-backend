@@ -4,7 +4,6 @@ import Race from '#models/race'
 import RaceResult from '#models/race_result'
 import RaceStage from '#models/race_stage'
 import db from '@adonisjs/lucid/services/db'
-import { DateTime } from 'luxon'
 import { RaceStageDto } from '../dto/race_stage_dto.js'
 import { RaceInfoDto } from '../dto/race_info_dto.js'
 import Startlist from '#models/startlist'
@@ -50,14 +49,7 @@ export class RaceService {
     const raceJson = await this.adapter.getInfosRace(slug, year)
     const raceInfo = RaceInfoDto.fromApiResponse(raceJson)
 
-    const race = await Race.updateOrCreate(
-      { slug },
-      {
-        ...raceInfo.toModel(),
-        startDate: DateTime.fromISO(raceInfo.startDate),
-        endDate: DateTime.fromISO(raceInfo.endDate),
-      }
-    )
+    const race = await Race.updateOrCreate({ slug }, raceInfo.toModel())
 
     const stagesDto = RaceStageDto.fromApiResponse(raceInfo.stages)
 

@@ -20,7 +20,7 @@ export default class PredictionBonuses extends BaseSchema {
         .inTable('users')
         .onDelete('SET NULL')
       table.date('application_date').notNullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

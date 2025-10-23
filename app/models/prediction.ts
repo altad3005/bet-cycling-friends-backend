@@ -48,4 +48,10 @@ export default class Prediction extends BaseModel {
 
   @hasMany(() => PredictionBonus)
   declare predictionBonuses: HasMany<typeof PredictionBonus>
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
+
 }

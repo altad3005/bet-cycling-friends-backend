@@ -15,7 +15,7 @@ export default class Predictions extends BaseSchema {
       table.integer('bonus_id').unsigned().references('id').inTable('bonuses').nullable()
       table.date('prediction_date').notNullable()
       table.integer('points_earned').defaultTo(0)
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

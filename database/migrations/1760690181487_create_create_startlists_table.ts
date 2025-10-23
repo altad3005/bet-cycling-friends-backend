@@ -8,12 +8,12 @@ export default class Startlists extends BaseSchema {
       table.increments('id')
       table.integer('race_id').unsigned().references('id').inTable('races').onDelete('CASCADE')
 
-      table.integer('rider_id').notNullable()
-      table.string('rider_name').notNullable()
-      table.string('team_name').notNullable()
+      table.integer('rider_id').nullable()
+      table.string('rider_name').nullable()
+      table.string('team_name').nullable()
       table.integer('uci_rank').nullable()
       table.string('country').nullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

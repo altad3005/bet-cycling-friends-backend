@@ -1,5 +1,5 @@
-import { GcResultDto } from '../../dto/gc_result_dto.js'
-import { StageResultDto } from '../../dto/stage_result_dto.js'
+import { GcResultDto } from '../../dto/result/gc_result_dto.js'
+import { StageResultDto } from '../../dto/result/stage_result_dto.js'
 import { RaceInfoDto } from '../../dto/race_info_dto.js'
 import { StartlistDto } from '../../dto/startlist_dto.js'
 

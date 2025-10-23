@@ -2,7 +2,7 @@ import Race from '#models/race'
 import { RaceService } from '#services/race_service'
 import Prediction from '#models/prediction'
 import GTTeam from '#models/gt_team'
-import { GcResultDto } from '../../dto/gc_result_dto.js'
+import { GcResultDto } from '../../dto/result/gc_result_dto.js'
 
 export class ResultCorrectionService {
   constructor(private raceService: RaceService) {}

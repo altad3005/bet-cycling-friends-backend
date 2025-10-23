@@ -10,7 +10,7 @@ export default class UserBonuses extends BaseSchema {
       table.integer('bonus_id').unsigned().references('id').inTable('bonuses').onDelete('CASCADE')
       table.date('attribution_date').notNullable()
       table.integer('bonus_points').defaultTo(0)
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

@@ -25,4 +25,10 @@ export default class UserBonus extends BaseModel {
 
   @belongsTo(() => Bonus)
   declare bonus: BelongsTo<typeof Bonus>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

@@ -9,7 +9,7 @@ export default class Seasons extends BaseSchema {
       table.integer('year').notNullable()
       table.date('start_date').notNullable()
       table.date('end_date').notNullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

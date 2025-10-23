@@ -9,7 +9,7 @@ export default class GTTeams extends BaseSchema {
       table.integer('points_earned').defaultTo(0)
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('race_id').unsigned().references('id').inTable('races').onDelete('CASCADE')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

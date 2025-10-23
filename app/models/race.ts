@@ -24,10 +24,10 @@ export default class Race extends BaseModel {
   declare multiplicator: number
 
   @column.date()
-  declare startDate: DateTime
+  declare startDate: DateTime | null
 
   @column.date()
-  declare endDate: DateTime
+  declare endDate: DateTime | null
 
   @column()
   declare maxBudget: number
@@ -73,4 +73,10 @@ export default class Race extends BaseModel {
 
   @hasMany(() => Startlist)
   declare startlist: HasMany<typeof Startlist>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

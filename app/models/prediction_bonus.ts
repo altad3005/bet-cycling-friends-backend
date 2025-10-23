@@ -29,4 +29,10 @@ export default class PredictionBonus extends BaseModel {
 
   @belongsTo(() => User)
   declare targetUser: BelongsTo<typeof User>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

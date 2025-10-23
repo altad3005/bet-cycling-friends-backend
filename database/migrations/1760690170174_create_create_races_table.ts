@@ -23,7 +23,7 @@ export default class Races extends BaseSchema {
       table.json('prev_editions').nullable()
       table.json('stages_winners').nullable()
 
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

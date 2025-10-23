@@ -16,7 +16,7 @@ export default class GTTeamRiders extends BaseSchema {
       table.float('price').notNullable()
       table.string('role').nullable()
       table.integer('points_earned').defaultTo(0)
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 
