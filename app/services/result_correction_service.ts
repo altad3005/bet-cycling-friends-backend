@@ -1,35 +1,38 @@
 import Race from '#models/race'
-import { RaceService } from '#services/race_service'
 import Prediction from '#models/prediction'
 import GTTeam from '#models/gt_team'
-import { GcResultDto } from '../../dto/result/gc_result_dto.js'
+import RaceResult from '#models/race_result'
+import { RaceService } from '#services/race_service'
 
 export class ResultCorrectionService {
   constructor(private raceService: RaceService) {}
 
   async correctRaceResults(raceId: number): Promise<void> {
     const race = await Race.findOrFail(raceId)
-    const results: GcResultDto[] = await this.raceService.fetchResultsGc(
-      race.slug,
-      race.endDate.year
-    )
+
+    let results = await this.raceService.getResultsGc(race.id)
 
     const predictions = await Prediction.query().where('raceId', raceId)
+    const resultMap = new Map(results.map((r) => [r.riderName, r]))
 
     for (const prediction of predictions) {
-      const favoritePoints = this.calculatePoints(prediction.favoriteRider, results)
-      const bonusPoints = this.calculatePoints(prediction.bonusRider, results)
+      const favorite = resultMap.get(prediction.favoriteRider)
+      const bonus = resultMap.get(prediction.bonusRider)
 
-      prediction.pointsEarned = favoritePoints + bonusPoints
-      prediction.placementFavoriteRider = this.getPlacement(prediction.favoriteRider, results)
-      prediction.placementBonusRider = this.getPlacement(prediction.bonusRider, results)
+      prediction.pointsEarned = this.calculateGcPoints(favorite) + this.calculateGcPoints(bonus)
+      prediction.placementFavoriteRider = favorite?.rank ?? 0
+      prediction.placementBonusRider = bonus?.rank ?? 0
+
+      await prediction.save()
     }
   }
 
-  async correctGTStageResults(raceId: number, stageNumber: string, year: number) {
+  async correctGTStageResults(raceId: number, stageNumber: string): Promise<void> {
     const race = await Race.findOrFail(raceId)
-    const raceResults = await this.raceService.fetchResultsStage(race.slug, stageNumber, year)
 
+    let stageResults = await this.raceService.getResultsStage(race.id, stageNumber)
+
+    // 🟢 Étape 2 — recalcul des points d’équipe GT
     const teams = await GTTeam.query()
       .whereHas('race', (q) => q.where('id', raceId))
       .preload('riders')
@@ -38,7 +41,7 @@ export class ResultCorrectionService {
       let totalTeamPoints = 0
 
       for (const rider of team.riders) {
-        const result = raceResults.find((r) => r.riderName === rider.riderName)
+        const result = stageResults.find((r) => r.riderName === rider.riderName)
         if (!result) continue
 
         const points = this.calculateStagePoints(result.rank)
@@ -52,11 +55,8 @@ export class ResultCorrectionService {
     }
   }
 
-  private calculatePoints(riderName: string | null, results: GcResultDto[]): number {
-    if (!riderName) return 0
-    const rider = results.find((r) => r.riderName === riderName)
+  private calculateGcPoints(rider?: RaceResult): number {
     if (!rider) return 0
-
     const rank = rider.rank
     if (rank === 1) return 50
     if (rank === 2) return 30
@@ -69,11 +69,5 @@ export class ResultCorrectionService {
     if (rank === 1) return 35
     if (rank <= 10) return 10
     return 0
-  }
-
-  private getPlacement(riderName: string | null, results: GcResultDto[]): number {
-    if (!riderName) return 0
-    const rider = results.find((r) => r.riderName === riderName)
-    return rider ? rider.rank : 0
   }
 }

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo, hasMany, beforeSave } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Season from './season.js'
 import Prediction from './prediction.js'
@@ -79,4 +79,21 @@ export default class Race extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updated_at: DateTime
+
+  @beforeSave()
+  static async attachToSeason(race: Race) {
+    if (!race.year) return
+
+    let season = await Season.query().where('year', race.year).first()
+
+    if (!season) {
+      season = await Season.create({
+        year: race.year,
+        startDate: DateTime.fromISO(`${race.year}-01-01`),
+        endDate: DateTime.fromISO(`${race.year}-12-31`),
+      })
+    }
+
+    race.idSeason = season.id
+  }
 }

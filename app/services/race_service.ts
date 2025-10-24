@@ -80,4 +80,12 @@ export class RaceService {
       }
     })
   }
+
+  async getResultsGc(id: number) {
+    return RaceResult.query().where('raceId', id).orderBy('rank')
+  }
+
+  async getResultsStage(id: number, stageNumber: string) {
+    return RaceResult.query().where('raceId', id).where('stageNumber', stageNumber).orderBy('rank')
+  }
 }
