@@ -10,7 +10,7 @@ export default class LeagueMembers extends BaseSchema {
       table.integer('league_id').unsigned().references('id').inTable('leagues').onDelete('CASCADE')
       table.string('role').notNullable()
       table.dateTime('joined_at').defaultTo(this.now())
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

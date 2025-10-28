@@ -9,12 +9,12 @@ export default class UserBonus extends BaseModel {
   declare id: number
 
   @column()
-  declare idUser: number
+  declare userId: number
 
   @column()
-  declare idBonus: number
+  declare bonusId: number
 
-  @column.date()
+  @column.dateTime()
   declare attributionDate: DateTime
 
   @column()
@@ -25,4 +25,10 @@ export default class UserBonus extends BaseModel {
 
   @belongsTo(() => Bonus)
   declare bonus: BelongsTo<typeof Bonus>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

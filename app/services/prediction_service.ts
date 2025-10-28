@@ -3,15 +3,21 @@ import Race from '#models/race'
 import { DateTime } from 'luxon'
 
 export class PredictionService {
-  async createPrediction(userId: number, raceId: number, favoriRider: string) {
+  async createPrediction(userId: number, raceId: number, favoriRider: string, bonusRider: string) {
     const race = await Race.findOrFail(raceId)
+
+    if (!race.startDate) {
+      throw new Error('Cannot create a prediction: race start date is unknown.')
+    }
+
     if (race.startDate <= DateTime.now()) {
       throw new Error('Predictions are closed for this race.')
     }
     await Prediction.create({
-      idUser: userId,
-      idRace: raceId,
-      favorite: favoriRider,
+      userId: userId,
+      raceId: raceId,
+      favoriteRiderName: favoriRider,
+      bonusRiderName: bonusRider,
     })
   }
 
@@ -19,14 +25,20 @@ export class PredictionService {
     return await Prediction.query().where('id', predictionId).firstOrFail()
   }
 
-  async updatePrediction(predictionId: number, favoriteRider: string) {
+  async updatePrediction(predictionId: number, favoriteRider: string, bonusRider: string) {
     const prediction = await this.getPredictionById(predictionId)
-    const race = await Race.findOrFail(prediction.idRace)
+    const race = await Race.findOrFail(prediction.raceId)
+
+    if (!race.startDate) {
+      throw new Error('Cannot create a prediction: race start date is unknown.')
+    }
+
     if (race.startDate <= DateTime.now()) {
       throw new Error('Predictions are closed for this race.')
     }
 
-    prediction.favorite = favoriteRider
+    prediction.favoriteRiderName = favoriteRider
+    prediction.bonusRiderName = bonusRider
     await prediction.save()
     return prediction
   }

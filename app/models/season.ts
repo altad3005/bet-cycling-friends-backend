@@ -11,10 +11,10 @@ export default class Season extends BaseModel {
   @column()
   declare year: number
 
-  @column.date()
+  @column.dateTime()
   declare startDate: DateTime
 
-  @column.date()
+  @column.dateTime()
   declare endDate: DateTime
 
   @hasMany(() => League)
@@ -22,4 +22,10 @@ export default class Season extends BaseModel {
 
   @hasMany(() => Race)
   declare races: HasMany<typeof Race>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

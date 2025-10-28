@@ -6,25 +6,17 @@ import { inject } from '@adonisjs/core'
 export default class RacesController {
   constructor(private raceService: RaceService) {}
 
+  async raceInfo({ params, response }: HttpContext) {
+    const raceSlug = params.slug
+    const year = params.year
+    const raceInfo = await this.raceService.syncRaceInfos(raceSlug, year)
+    return response.ok({ message: 'Race info retrieved successfully', data: raceInfo })
+  }
+
   async startList({ params, response }: HttpContext) {
     const raceSlug = params.slug
     const year = params.year
-    const startlist = await this.raceService.getStartlist(raceSlug, year)
+    const startlist = await this.raceService.syncStartlist(raceSlug, year)
     return response.ok({ message: 'Startlist retrieved successfully', data: startlist })
-  }
-
-  async resultsGc({ params, response }: HttpContext) {
-    const raceSlug = params.slug
-    const year = params.year
-    const results = await this.raceService.getResultsGc(raceSlug, year)
-    return response.ok({ message: 'GC Results retrieved successfully', data: results })
-  }
-
-  async resultsStages({ params, response }: HttpContext) {
-    const raceSlug = params.slug
-    const year = params.year
-    const stageNumber = params.stageNumber
-    const results = await this.raceService.getResultsStage(raceSlug, stageNumber, year)
-    return response.ok({ message: 'Stage Results retrieved successfully', data: results })
   }
 }

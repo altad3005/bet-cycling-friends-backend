@@ -11,7 +11,7 @@ export default class Leagues extends BaseSchema {
       table.string('invite_code').notNullable().unique()
       table.integer('creator_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('season_id').unsigned().references('id').inTable('seasons').onDelete('CASCADE')
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

@@ -7,9 +7,9 @@ export default class Seasons extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('year').notNullable()
-      table.date('start_date').notNullable()
-      table.date('end_date').notNullable()
-      table.timestamps(true)
+      table.dateTime('start_date').notNullable()
+      table.dateTime('end_date').notNullable()
+      table.timestamps(true, true)
     })
   }
 

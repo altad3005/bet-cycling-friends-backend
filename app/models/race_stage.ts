@@ -1,29 +1,32 @@
 import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import GTTeam from './gt_team.js'
+import Race from './race.js'
 import { DateTime } from 'luxon'
 
-export default class GTTeamRider extends BaseModel {
+export default class RaceStage extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare gtTeamId: number
+  declare raceId: number
 
   @column()
-  declare riderName: string
+  declare stageName: string
 
   @column()
-  declare riderPrice: number
+  declare stageUrl?: string
 
   @column()
-  declare role?: string | null
+  declare profileIcon?: string
+
+  @column.date()
+  declare date?: DateTime | null
 
   @column()
-  declare pointsEarned: number
+  declare stageNumber?: number
 
-  @belongsTo(() => GTTeam)
-  declare team: BelongsTo<typeof GTTeam>
+  @belongsTo(() => Race)
+  declare race: BelongsTo<typeof Race>
 
   @column.dateTime({ autoCreate: true })
   declare created_at: DateTime

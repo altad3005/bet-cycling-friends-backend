@@ -2,6 +2,7 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import PredictionBonus from '#models/prediction_bonus'
 import UserBonus from '#models/user_bonus'
+import { DateTime } from 'luxon'
 
 export default class Bonus extends BaseModel {
   @column({ isPrimary: true })
@@ -14,10 +15,10 @@ export default class Bonus extends BaseModel {
   declare description: string
 
   @column()
-  declare type: string
+  declare bonusType: string
 
   @column()
-  declare effect: string
+  declare effectDescription: string
 
   @column()
   declare seasonLimit: number | null
@@ -33,4 +34,10 @@ export default class Bonus extends BaseModel {
 
   @hasMany(() => UserBonus)
   declare userBonuses: HasMany<typeof UserBonus>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

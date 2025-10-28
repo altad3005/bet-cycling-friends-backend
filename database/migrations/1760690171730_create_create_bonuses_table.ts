@@ -8,12 +8,12 @@ export default class Bonuses extends BaseSchema {
       table.increments('id')
       table.string('name').notNullable()
       table.text('description').nullable()
-      table.string('type').notNullable()
-      table.string('effect').notNullable()
+      table.string('bonus_type').notNullable()
+      table.string('effect_description').notNullable()
       table.integer('season_limit').nullable()
       table.integer('race_limit').nullable()
       table.text('attribution_condition').nullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

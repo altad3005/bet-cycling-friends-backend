@@ -13,8 +13,14 @@ export default class PredictionBonuses extends BaseSchema {
         .inTable('predictions')
         .onDelete('CASCADE')
       table.integer('bonus_id').unsigned().references('id').inTable('bonuses').onDelete('CASCADE')
-      table.date('application_date').notNullable()
-      table.timestamps(true)
+      table
+        .integer('target_user_id')
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onDelete('SET NULL')
+      table.dateTime('application_date').notNullable()
+      table.timestamps(true, true)
     })
   }
 

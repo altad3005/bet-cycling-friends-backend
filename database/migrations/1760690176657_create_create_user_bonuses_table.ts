@@ -8,9 +8,9 @@ export default class UserBonuses extends BaseSchema {
       table.increments('id')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('bonus_id').unsigned().references('id').inTable('bonuses').onDelete('CASCADE')
-      table.date('attribution_date').notNullable()
+      table.dateTime('attribution_date').notNullable()
       table.integer('bonus_points').defaultTo(0)
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

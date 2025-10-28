@@ -3,18 +3,22 @@ import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Prediction from './prediction.js'
 import Bonus from './bonus.js'
+import User from '#models/user'
 
 export default class PredictionBonus extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare idPrediction: number
+  declare predictionId: number
 
   @column()
-  declare idBonus: number
+  declare bonusId: number
 
-  @column.date()
+  @column()
+  declare targetUserId: number | null
+
+  @column.dateTime()
   declare applicationDate: DateTime
 
   @belongsTo(() => Prediction)
@@ -22,4 +26,13 @@ export default class PredictionBonus extends BaseModel {
 
   @belongsTo(() => Bonus)
   declare bonus: BelongsTo<typeof Bonus>
+
+  @belongsTo(() => User)
+  declare targetUser: BelongsTo<typeof User>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

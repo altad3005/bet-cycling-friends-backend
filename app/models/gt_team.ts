@@ -3,16 +3,20 @@ import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Race from './race.js'
 import GTTeamRider from './gt_team_rider.js'
+import { DateTime } from 'luxon'
 
 export default class GTTeam extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare idUser: number
+  declare userId: number
 
   @column()
-  declare idRace: number
+  declare raceId: number
+
+  @column()
+  declare totalPoints: number
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
@@ -22,4 +26,10 @@ export default class GTTeam extends BaseModel {
 
   @hasMany(() => GTTeamRider)
   declare riders: HasMany<typeof GTTeamRider>
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }

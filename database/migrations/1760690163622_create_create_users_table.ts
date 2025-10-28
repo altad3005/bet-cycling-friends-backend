@@ -11,7 +11,7 @@ export default class Users extends BaseSchema {
       table.string('password').notNullable()
       table.string('avatar_url').nullable()
       table.text('notification_preferences').nullable()
-      table.timestamps(true)
+      table.timestamps(true, true)
     })
   }
 

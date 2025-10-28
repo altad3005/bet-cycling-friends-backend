@@ -16,7 +16,7 @@ export default class League extends BaseModel {
   @column()
   declare description: string
 
-  @column({ serializeAs: null })
+  @computed({ serializeAs: 'inviteCode' })
   declare inviteCode: string
 
   @beforeCreate()
@@ -38,14 +38,14 @@ export default class League extends BaseModel {
   @belongsTo(() => Season)
   declare season: BelongsTo<typeof Season>
 
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime
-
   @computed()
   public get displayInviteCode(): string | null {
     return this.$extras.canViewInviteCode ? this.inviteCode : null
   }
+
+  @column.dateTime({ autoCreate: true })
+  declare created_at: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updated_at: DateTime
 }
