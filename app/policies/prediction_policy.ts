@@ -4,14 +4,14 @@ import type { AuthorizerResponse } from '@adonisjs/bouncer/types'
 
 export default class PredictionPolicy extends BasePolicy {
   view(user: { id: number }, prediction: Prediction): AuthorizerResponse {
-    return prediction.idUser === user.id
+    return prediction.userId === user.id
   }
 
   update(user: { id: number }, prediction: Prediction): AuthorizerResponse {
-    return prediction.idUser === user.id
+    return prediction.userId === user.id
   }
 
   delete(user: { id: number }, prediction: Prediction): AuthorizerResponse {
-    return prediction.idUser === user.id
+    return prediction.userId === user.id
   }
 }

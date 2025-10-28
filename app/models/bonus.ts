@@ -15,10 +15,10 @@ export default class Bonus extends BaseModel {
   declare description: string
 
   @column()
-  declare type: string
+  declare bonusType: string
 
   @column()
-  declare effect: string
+  declare effectDescription: string
 
   @column()
   declare seasonLimit: number | null

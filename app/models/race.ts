@@ -33,7 +33,7 @@ export default class Race extends BaseModel {
   declare maxBudget: number
 
   @column()
-  declare idSeason: number
+  declare seasonId: number
 
   @column()
   declare category?: string
@@ -54,13 +54,13 @@ export default class Race extends BaseModel {
   declare year?: number
 
   @column()
-  declare prevEditions?: any
+  declare prevEditions?: string | null
 
   @hasMany(() => RaceStage)
   declare stages: HasMany<typeof RaceStage>
 
   @column()
-  declare stagesWinners?: any
+  declare stagesWinners?: string | null
 
   @belongsTo(() => Season)
   declare season: BelongsTo<typeof Season>
@@ -94,6 +94,6 @@ export default class Race extends BaseModel {
       })
     }
 
-    race.idSeason = season.id
+    race.seasonId = season.id
   }
 }

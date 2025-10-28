@@ -16,8 +16,8 @@ export class ResultCorrectionService {
     const resultMap = new Map(results.map((r) => [r.riderName, r]))
 
     for (const prediction of predictions) {
-      const favorite = resultMap.get(prediction.favoriteRider)
-      const bonus = resultMap.get(prediction.bonusRider)
+      const favorite = resultMap.get(prediction.favoriteRiderName)
+      const bonus = resultMap.get(prediction.bonusRiderName)
 
       prediction.pointsEarned = this.calculateGcPoints(favorite) + this.calculateGcPoints(bonus)
       prediction.placementFavoriteRider = favorite?.rank ?? 0
@@ -32,7 +32,6 @@ export class ResultCorrectionService {
 
     let stageResults = await this.raceService.getResultsStage(race.id, stageNumber)
 
-    // 🟢 Étape 2 — recalcul des points d’équipe GT
     const teams = await GTTeam.query()
       .whereHas('race', (q) => q.where('id', raceId))
       .preload('riders')
@@ -50,7 +49,7 @@ export class ResultCorrectionService {
         await rider.save()
       }
 
-      team.merge({ pointsEarned: totalTeamPoints })
+      team.merge({ totalPoints: totalTeamPoints })
       await team.save()
     }
   }

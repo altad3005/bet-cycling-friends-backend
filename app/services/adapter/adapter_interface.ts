@@ -6,6 +6,6 @@ import { StartlistDto } from '../../dto/startlist_dto.js'
 export interface CyclingApiAdapter {
   getResultsGc(slug: string, year?: number): Promise<GcResultDto[]>
   getStartlist(slug: string, year?: number): Promise<StartlistDto[]>
-  getResultsStage(raceSlug: string, stageNumber: string, year?: number): Promise<StageResultDto[]>
+  getResultsStage(raceSlug: string, stageNumber: number, year?: number): Promise<StageResultDto[]>
   getInfosRace(slug: string, year?: number): Promise<RaceInfoDto>
 }

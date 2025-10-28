@@ -56,7 +56,8 @@ export class RaceInfoDto {
       startDate: this.startDate ? DateTime.fromISO(this.startDate) : null,
       endDate: this.endDate ? DateTime.fromISO(this.endDate) : null,
       type: this.isOneDayRace ? 'one-day' : 'stage',
-
+      maxBudget: 0,
+      multiplicator: 1,
       prevEditions: JSON.stringify(this.prevEditions ?? []),
       stagesWinners: JSON.stringify(this.stagesWinners ?? []),
     }

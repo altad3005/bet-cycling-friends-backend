@@ -17,7 +17,7 @@ export class PCSAdapter implements CyclingApiAdapter {
     return StartlistDto.fromApiResponse(res.data)
   }
 
-  async getResultsStage(raceSlug: string, stageNumber: string, year = DateTime.now().year) {
+  async getResultsStage(raceSlug: string, stageNumber: number, year = DateTime.now().year) {
     const res = await api.get(`/race/${raceSlug}/${year}/stage/${stageNumber}`)
     return StageResultDto.fromApiResponse(res.data)
   }

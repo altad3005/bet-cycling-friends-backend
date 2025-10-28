@@ -22,7 +22,7 @@ export default class AdminController {
 
   async promoteMember({ auth, bouncer, response, params }: HttpContext) {
     const user = await auth.authenticate()
-    const league = await League.findOrFail(params.userId)
+    const league = await League.findOrFail(params.leagueId)
     const userLeague = await this.leagueService.getUserLeague(user.id, params.leagueId)
 
     await bouncer.with('LeaguePolicy').authorize('manageMembers', league, userLeague)

@@ -14,10 +14,10 @@ export class PredictionService {
       throw new Error('Predictions are closed for this race.')
     }
     await Prediction.create({
-      idUser: userId,
-      idRace: raceId,
-      favoriteRider: favoriRider,
-      bonusRider: bonusRider,
+      userId: userId,
+      raceId: raceId,
+      favoriteRiderName: favoriRider,
+      bonusRiderName: bonusRider,
     })
   }
 
@@ -27,7 +27,7 @@ export class PredictionService {
 
   async updatePrediction(predictionId: number, favoriteRider: string, bonusRider: string) {
     const prediction = await this.getPredictionById(predictionId)
-    const race = await Race.findOrFail(prediction.idRace)
+    const race = await Race.findOrFail(prediction.raceId)
 
     if (!race.startDate) {
       throw new Error('Cannot create a prediction: race start date is unknown.')
@@ -37,8 +37,8 @@ export class PredictionService {
       throw new Error('Predictions are closed for this race.')
     }
 
-    prediction.favoriteRider = favoriteRider
-    prediction.bonusRider = bonusRider
+    prediction.favoriteRiderName = favoriteRider
+    prediction.bonusRiderName = bonusRider
     await prediction.save()
     return prediction
   }

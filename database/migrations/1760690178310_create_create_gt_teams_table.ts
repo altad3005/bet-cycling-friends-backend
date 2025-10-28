@@ -6,9 +6,9 @@ export default class GTTeams extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('points_earned').defaultTo(0)
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
       table.integer('race_id').unsigned().references('id').inTable('races').onDelete('CASCADE')
+      table.integer('total_points').defaultTo(0)
       table.timestamps(true, true)
     })
   }

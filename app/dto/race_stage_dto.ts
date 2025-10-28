@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export interface RaceStageInfo {
   stage_name: string
   stage_url: string
@@ -25,7 +27,7 @@ export class RaceStageDto {
       stageName: this.stageName,
       stageUrl: this.stageUrl,
       profileIcon: this.profileIcon,
-      date: this.date,
+      date: this.date ? DateTime.fromISO(this.date) : null,
     }
   }
 

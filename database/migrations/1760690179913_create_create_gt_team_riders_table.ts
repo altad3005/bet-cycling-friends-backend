@@ -13,7 +13,7 @@ export default class GTTeamRiders extends BaseSchema {
         .inTable('gt_teams')
         .onDelete('CASCADE')
       table.string('rider_name').notNullable()
-      table.float('price').notNullable()
+      table.float('rider_price').notNullable()
       table.string('role').nullable()
       table.integer('points_earned').defaultTo(0)
       table.timestamps(true, true)

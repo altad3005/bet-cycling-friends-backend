@@ -19,8 +19,8 @@ export default class RaceStage extends BaseModel {
   @column()
   declare profileIcon?: string
 
-  @column()
-  declare date?: string
+  @column.date()
+  declare date?: DateTime | null
 
   @column()
   declare stageNumber?: number

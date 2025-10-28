@@ -9,12 +9,12 @@ export default class UserBonus extends BaseModel {
   declare id: number
 
   @column()
-  declare idUser: number
+  declare userId: number
 
   @column()
-  declare idBonus: number
+  declare bonusId: number
 
-  @column.date()
+  @column.dateTime()
   declare attributionDate: DateTime
 
   @column()

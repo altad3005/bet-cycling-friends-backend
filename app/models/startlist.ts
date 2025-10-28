@@ -8,19 +8,19 @@ export default class Startlist extends BaseModel {
   declare id: number
 
   @column()
-  declare race_id: number
+  declare raceId: number
 
   @column()
-  declare rider_id: number | null
+  declare riderId: number | null
 
   @column()
-  declare rider_name: string | null
+  declare riderName: string | null
 
   @column()
-  declare team_name: string | null
+  declare teamName: string | null
 
   @column()
-  declare uci_rank: number | null
+  declare uciRank: number | null
 
   @column()
   declare country: string | null

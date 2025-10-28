@@ -7,7 +7,6 @@ export default class Startlists extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('race_id').unsigned().references('id').inTable('races').onDelete('CASCADE')
-
       table.integer('rider_id').nullable()
       table.string('rider_name').nullable()
       table.string('team_name').nullable()

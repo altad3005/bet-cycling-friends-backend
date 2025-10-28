@@ -42,7 +42,7 @@ export class BaseRaceResultDto {
     this.uciPoints = data.uci_points
   }
 
-  toModel(raceId: number, stageNumber?: string) {
+  toModel(raceId: number, stageNumber?: number) {
     return {
       raceId,
       stageNumber: stageNumber ?? null, // utile pour étapes

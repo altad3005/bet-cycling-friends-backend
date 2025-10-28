@@ -19,7 +19,7 @@ export class StageResultDto extends BaseRaceResultDto {
     return apiResponse.map((r) => new StageResultDto(r))
   }
 
-  override toModel(raceId: number, stageNumber?: string) {
+  override toModel(raceId: number, stageNumber?: number) {
     return {
       ...super.toModel(raceId, stageNumber),
       status: this.status,

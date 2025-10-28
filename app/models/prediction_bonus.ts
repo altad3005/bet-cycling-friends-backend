@@ -10,15 +10,15 @@ export default class PredictionBonus extends BaseModel {
   declare id: number
 
   @column()
-  declare idPrediction: number
+  declare predictionId: number
 
   @column()
-  declare idBonus: number
+  declare bonusId: number
 
   @column()
   declare targetUserId: number | null
 
-  @column.date()
+  @column.dateTime()
   declare applicationDate: DateTime
 
   @belongsTo(() => Prediction)

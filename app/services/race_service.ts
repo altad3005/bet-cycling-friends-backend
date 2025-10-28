@@ -30,7 +30,7 @@ export class RaceService {
     })
   }
 
-  async syncResultsStage(raceSlug: string, stageNumber: string, year?: number) {
+  async syncResultsStage(raceSlug: string, stageNumber: number, year?: number) {
     const race = await Race.findByOrFail('slug', raceSlug)
     const dtos = await this.adapter.getResultsStage(raceSlug, stageNumber, year)
 
@@ -73,7 +73,7 @@ export class RaceService {
     await db.transaction(async (trx) => {
       for (const dto of dtos) {
         await Startlist.updateOrCreate(
-          { race_id: race.id, rider_id: dto.riderNumber },
+          { raceId: race.id, riderId: dto.riderNumber },
           dto.toModel(race.id),
           { client: trx }
         )
@@ -82,10 +82,14 @@ export class RaceService {
   }
 
   async getResultsGc(id: number) {
-    return RaceResult.query().where('raceId', id).orderBy('rank')
+    return RaceResult.query().where('race_id', id).orderBy('rank')
   }
 
   async getResultsStage(id: number, stageNumber: string) {
-    return RaceResult.query().where('raceId', id).where('stageNumber', stageNumber).orderBy('rank')
+    return RaceResult.query().where('race_id', id).where('stageNumber', stageNumber).orderBy('rank')
+  }
+
+  async getStartlist(raceId: number) {
+    return Startlist.query().where('race_id', raceId)
   }
 }

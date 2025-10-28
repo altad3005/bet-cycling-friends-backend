@@ -8,16 +8,16 @@ export default class GTTeamRider extends BaseModel {
   declare id: number
 
   @column()
-  declare idGTTeam: number
+  declare gtTeamId: number
 
   @column()
   declare riderName: string
 
   @column()
-  declare price: number
+  declare riderPrice: number
 
   @column()
-  declare role: string | null
+  declare role?: string | null
 
   @column()
   declare pointsEarned: number

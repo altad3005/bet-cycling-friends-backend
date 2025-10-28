@@ -10,13 +10,13 @@ export default class GTTeam extends BaseModel {
   declare id: number
 
   @column()
-  declare idUser: number
+  declare userId: number
 
   @column()
-  declare idRace: number
+  declare raceId: number
 
   @column()
-  declare pointsEarned: number
+  declare totalPoints: number
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>

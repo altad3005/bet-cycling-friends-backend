@@ -14,7 +14,7 @@ export default class RaceResult extends BaseModel {
   declare race: BelongsTo<typeof Race>
 
   @column()
-  declare stageNumber: string | null
+  declare stageNumber: number | null
 
   @column()
   declare riderName: string
@@ -50,7 +50,7 @@ export default class RaceResult extends BaseModel {
   declare riderNumber: number
 
   @column()
-  declare time: string
+  declare time: string | null
 
   @column()
   declare bonusTime: string | null

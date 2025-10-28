@@ -11,27 +11,27 @@ export default class Prediction extends BaseModel {
   declare id: number
 
   @column()
-  declare idUser: number
+  declare userId: number
 
   @column()
-  declare idRace: number
+  declare raceId: number
 
   @column()
-  declare favoriteRider: string
+  declare favoriteRiderName: string
 
   @column()
   declare placementFavoriteRider: number
 
   @column()
-  declare bonusRider: string
+  declare bonusRiderName: string
 
   @column()
   declare placementBonusRider: number
 
   @column()
-  declare idBonus: number | null
+  declare bonusId: number | null
 
-  @column.date()
+  @column.dateTime()
   declare predictionDate: DateTime
 
   @column()
@@ -48,6 +48,7 @@ export default class Prediction extends BaseModel {
 
   @hasMany(() => PredictionBonus)
   declare predictionBonuses: HasMany<typeof PredictionBonus>
+
   @column.dateTime({ autoCreate: true })
   declare created_at: DateTime
 

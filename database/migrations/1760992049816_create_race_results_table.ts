@@ -14,8 +14,7 @@ export default class RaceResultsSchema extends BaseSchema {
         .inTable('races')
         .onDelete('CASCADE')
 
-      table.string('stage_number').nullable() // Étape ou null si GC
-
+      table.integer('stage_number').nullable()
       table.string('rider_name').notNullable()
       table.string('rider_url').notNullable()
       table.string('team_name').notNullable()
@@ -27,11 +26,10 @@ export default class RaceResultsSchema extends BaseSchema {
       table.integer('pcs_points').defaultTo(0)
       table.integer('uci_points').defaultTo(0)
       table.integer('rider_number').notNullable()
-      table.string('time').notNullable()
+      table.string('time').nullable()
       table.string('bonus_time').nullable()
 
       table.unique(['race_id', 'rider_url', 'stage_number'])
-
       table.timestamps(true, true)
     })
   }
