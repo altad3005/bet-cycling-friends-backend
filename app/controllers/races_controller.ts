@@ -6,6 +6,11 @@ import { inject } from '@adonisjs/core'
 export default class RacesController {
   constructor(private raceService: RaceService) {}
 
+  async index({ response }: HttpContext) {
+    const races = await this.raceService.getAllRaces()
+    return response.ok({ message: 'Races retrieved successfully', data: races })
+  }
+
   async raceInfo({ params, response }: HttpContext) {
     const raceSlug = params.slug
     const year = params.year

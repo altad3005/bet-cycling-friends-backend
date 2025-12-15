@@ -51,6 +51,9 @@ export default class Race extends BaseModel {
   declare isOneDayRace?: boolean
 
   @column()
+  declare isMonument?: boolean
+
+  @column()
   declare year?: number
 
   @column()

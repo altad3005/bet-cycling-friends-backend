@@ -92,4 +92,8 @@ export class RaceService {
   async getStartlist(raceId: number) {
     return Startlist.query().where('race_id', raceId)
   }
+
+  async getAllRaces() {
+    return Race.all()
+  }
 }

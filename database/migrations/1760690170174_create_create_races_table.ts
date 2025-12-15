@@ -19,6 +19,7 @@ export default class Races extends BaseSchema {
       table.string('nationality', 5).nullable()
       table.string('uci_tour').nullable()
       table.boolean('is_one_day_race').defaultTo(false)
+      table.boolean('is_monument').defaultTo(false)
       table.integer('year').nullable()
       table.jsonb('prev_editions').nullable()
       table.jsonb('stages_winners').nullable()
