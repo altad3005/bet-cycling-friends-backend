@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"          # permet de se connecter depuis l'hôte
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql
 
 volumes:
   db-data:
